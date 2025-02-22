@@ -12,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>
+      <body style={{ margin: 0 }}>
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
             <div>{children}</div>
