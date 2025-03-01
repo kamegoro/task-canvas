@@ -1,5 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs';
-import * as path from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
