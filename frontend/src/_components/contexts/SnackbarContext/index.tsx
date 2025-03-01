@@ -21,7 +21,7 @@ type SnackState = {
   type: Extract<AlertPropsType['severity'], 'success' | 'info' | 'error'>;
 };
 
-export const SnackbarProvider = ({ children }: { children: JSX.Element }) => {
+export const SnackbarProvider = ({ children }: { children: React.ReactNode }) => {
   const [snackState, setSnackState] = useState<SnackState[]>([]);
 
   const showSnackbar = (message: SnackState['message'], type: SnackState['type'], ms?: number) => {
