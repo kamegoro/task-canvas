@@ -7,11 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@chromatic-com/storybook'
-  ],
+  addons: ['@storybook/addon-links', '@storybook/addon-essentials', '@chromatic-com/storybook'],
 
   framework: {
     name: '@storybook/nextjs',
@@ -33,8 +29,8 @@ const config: StorybookConfig = {
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript'
-  }
+    reactDocgen: 'react-docgen-typescript',
+  },
 };
 
 export default config;
