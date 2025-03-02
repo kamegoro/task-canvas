@@ -13,6 +13,7 @@ import Box from '@/_components/mui/Box';
 import Calender from '@/_components/mui/Calendar';
 import Container from '@/_components/mui/Container';
 import Stack from '@/_components/mui/Stack';
+import TaskProgress from '@/_components/organisms/TaskProgress';
 import { Todo } from '@/domain/todo';
 import useSignOut from '@/hooks/useSignOut';
 import { useTodo } from '@/hooks/useTodo';
@@ -153,6 +154,10 @@ const Top = () => {
               borderBottom: 1,
               opacity: 0.1,
             }}
+          />
+          <TaskProgress
+            allCount={100}
+            currentCount={10}
           />
           <Box sx={{ marginTop: 3 }}>
             {todos.map((todo, i) => {
