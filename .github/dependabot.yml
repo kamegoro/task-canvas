@@ -19,8 +19,13 @@ updates:
     open-pull-requests-limit: 5
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directory: "/frontend"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
 
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
