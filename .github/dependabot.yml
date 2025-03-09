@@ -1,19 +1,19 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "frontend/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 10
 
   - package-ecosystem: "gomod"
-    directory: "/"
+    directory: "backend/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 10
 
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directory: "/.github"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
