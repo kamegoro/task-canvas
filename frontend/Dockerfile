@@ -1,4 +1,4 @@
-FROM node:22.14.0-alpine
+FROM node:23.9.0-alpine
 
 WORKDIR /task-canvas/frontend
 
