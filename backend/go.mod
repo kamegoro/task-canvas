@@ -1,6 +1,7 @@
 module task-canvas
 
 go 1.23.4
+toolchain go1.24.1
 
 require (
 	github.com/jackc/pgx/v5 v5.7.4
@@ -9,7 +10,7 @@ require (
 
 require (
 	github.com/agiledragon/gomonkey/v2 v2.13.0
-	github.com/go-playground/validator/v10 v10.25.0
+	github.com/go-playground/validator/v10 v10.26.0
 )
 
 require (
