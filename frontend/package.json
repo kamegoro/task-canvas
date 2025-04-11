@@ -19,7 +19,7 @@
     "@lit/react": "^1.0.7",
     "@mui/icons-material": "6.4.8",
     "@mui/material": "6.4.8",
-    "next": "15.2.5",
+    "next": "15.3.0",
     "react": "19",
     "react-dom": "19",
     "react-hook-form": "7.55.0"
