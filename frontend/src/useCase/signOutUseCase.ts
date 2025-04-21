@@ -1,12 +1,11 @@
-import { signOut as driverSignOut } from '@/driver';
+import { User } from '@/domain/user';
 
-const signOut = async (): Promise<void> => {
-  try {
-    await driverSignOut();
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to sign out');
+interface SignOutUseCaseInterface {
+  execute: (user: User) => void;
+}
+
+export class SignOutUseCase implements SignOutUseCaseInterface {
+  execute(user: User): void {
+    return user.signOut();
   }
-};
-
-export default signOut;
+}
