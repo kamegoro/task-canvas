@@ -7,6 +7,6 @@ import (
 
 type UserPort interface {
 	FindById(ctx context.Context, userId *domain.UserId) (*domain.User, error)
-	FindByEmail(ctx context.Context, email domain.Email) (*domain.User, error)
+	FindByEmail(ctx context.Context, email domain.Email) (*domain.Users, error)
 	Store(ctx context.Context, user *domain.User) error
 }
