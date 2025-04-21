@@ -21,6 +21,7 @@ import (
 type MockUserPort struct {
 	ctrl     *gomock.Controller
 	recorder *MockUserPortMockRecorder
+	isgomock struct{}
 }
 
 // MockUserPortMockRecorder is the mock recorder for MockUserPort.
@@ -41,10 +42,10 @@ func (m *MockUserPort) EXPECT() *MockUserPortMockRecorder {
 }
 
 // FindByEmail mocks base method.
-func (m *MockUserPort) FindByEmail(ctx context.Context, email domain.Email) (*domain.User, error) {
+func (m *MockUserPort) FindByEmail(ctx context.Context, email domain.Email) (*domain.Users, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByEmail", ctx, email)
-	ret0, _ := ret[0].(*domain.User)
+	ret0, _ := ret[0].(*domain.Users)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

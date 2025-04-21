@@ -288,10 +288,10 @@ func (mr *MockQuerierMockRecorder) FindTodo(ctx, userID any) *gomock.Call {
 }
 
 // FindUserByEmail mocks base method.
-func (m *MockQuerier) FindUserByEmail(ctx context.Context, email string) (db_driver.TaskCanvasUser, error) {
+func (m *MockQuerier) FindUserByEmail(ctx context.Context, email string) ([]db_driver.TaskCanvasUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByEmail", ctx, email)
-	ret0, _ := ret[0].(db_driver.TaskCanvasUser)
+	ret0, _ := ret[0].([]db_driver.TaskCanvasUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
