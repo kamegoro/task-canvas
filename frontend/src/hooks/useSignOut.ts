@@ -1,19 +1,22 @@
-import signOutUseCase from '@/useCase/signOutUseCase';
+import { useDI } from '@/context/DIContext';
+import { Email } from '@/domain/credential';
 
-type UseSignOutResult = {
-  signOut: () => Promise<void>;
-};
+interface UseSignOutInterface {
+  execute: (email: string) => void;
+}
 
-const useSignOut = (): UseSignOutResult => {
-  const signOut = async (): Promise<void> => {
-    try {
-      await signOutUseCase();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+export class UseSignOut implements UseSignOutInterface {
+  private readonly signOutUseCase: ReturnType<typeof useDI>['signOutUseCase'];
+  private readonly userFactory: ReturnType<typeof useDI>['userFactory'];
 
-  return { signOut };
-};
+  constructor() {
+    const { signOutUseCase, userFactory } = useDI();
+    this.signOutUseCase = signOutUseCase;
+    this.userFactory = userFactory;
+  }
 
-export default useSignOut;
+  execute(email: string): void {
+    const user = this.userFactory(new Email(email));
+    this.signOutUseCase.execute(user);
+  }
+}
