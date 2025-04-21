@@ -34,8 +34,12 @@ func TestSignInUseCase_Exec(t *testing.T) {
 		PasswordHash: passwordHash,
 	}
 
+	users := domain.Users{
+		Values: []domain.User{user},
+	}
+
 	mockUserPort := mock_port.NewMockUserPort(ctrl)
-	mockUserPort.EXPECT().FindByEmail(ctx, email).Times(2).Return(&user, nil)
+	mockUserPort.EXPECT().FindByEmail(ctx, email).Times(2).Return(&users, nil)
 	mockUserPort.EXPECT().FindByEmail(ctx, notExistEmail).Times(1).Return(nil, domain.ErrUserNotFound)
 
 	type fields struct {
