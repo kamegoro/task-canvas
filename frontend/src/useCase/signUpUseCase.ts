@@ -1,8 +1,11 @@
-import { SignUp } from '@/domain/signUp';
-import SignUpGateway from '@/gateway/signUp';
+import { Credential } from '@/domain/credential';
 
-export const signUp = async ({ email, password }: SignUp): Promise<void> => {
-  const userGateway = new SignUpGateway();
+interface SignUpUseCaseInterface {
+  execute: (credential: Credential) => Promise<void>;
+}
 
-  await userGateway.signUp(email, password);
-};
+export class SignUpUseCase implements SignUpUseCaseInterface {
+  async execute(credential: Credential): Promise<void> {
+    await credential.signUp();
+  }
+}
