@@ -4,6 +4,7 @@ import (
 	"context"
 	"task-canvas/domain"
 	db_driver "task-canvas/driver"
+	"task-canvas/logger"
 	"task-canvas/port"
 
 	sqlc "task-canvas/driver/generated"
@@ -55,17 +56,24 @@ func (g *UserGateway) Store(ctx context.Context, user *domain.User) error {
 	return nil
 }
 
-func (g *UserGateway) FindByEmail(ctx context.Context, email domain.Email) (*domain.User, error) {
-	dbUser, err := g.db_driver.FindUserByEmail(ctx, string(email))
+func (g *UserGateway) FindByEmail(ctx context.Context, email domain.Email) (*domain.Users, error) {
+	dbUsers, err := g.db_driver.FindUserByEmail(ctx, string(email))
+
 	if err != nil {
+		logger.Logger.Error("UserGateway: Failed to find user by email", "email", email)
 		return nil, domain.ErrPasswordIncorrect
 	}
 
-	user := domain.User{
-		Id:           domain.UserId(dbUser.ID),
-		Email:        domain.Email(dbUser.Email),
-		PasswordHash: domain.PasswordHash(dbUser.PasswordHash),
+	users := make([]domain.User, 0, len(dbUsers))
+
+	for _, u := range dbUsers {
+		user := domain.User{
+			Id:           domain.UserId(u.ID),
+			Email:        domain.Email(u.Email),
+			PasswordHash: domain.PasswordHash(u.PasswordHash),
+		}
+		users = append(users, user)
 	}
 
-	return &user, nil
+	return &domain.Users{Values: users}, nil
 }
