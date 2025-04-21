@@ -84,7 +84,7 @@ WHERE
   id = sqlc.arg(id)::uuid
 ;
 
--- name: FindUserByEmail :one
+-- name: FindUserByEmail :many
 SELECT
   id,
   email,
