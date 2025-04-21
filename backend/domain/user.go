@@ -21,3 +21,7 @@ type User struct {
 func NewUserId() UserId {
 	return UserId(uuid.New())
 }
+
+type Users struct {
+	Values []User
+}
