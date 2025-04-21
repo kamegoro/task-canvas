@@ -1,16 +1,22 @@
-import { SignUp } from '@/domain/signUp';
-import { signUp as signUpUseCase } from '@/useCase/signUpUseCase';
+import { useDI } from '@/context/DIContext';
+import { Email, Password } from '@/domain/credential';
 
-type UseSignUpResult = {
-  signUp: ({ email, password }: SignUp) => Promise<void>;
-};
+interface UseSignUpInterface {
+  execute: (email: string, password: string) => Promise<void>;
+}
 
-const useSignUp = (): UseSignUpResult => {
-  const signUp = async ({ email, password }: SignUp): Promise<void> => {
-    await signUpUseCase({ email, password });
-  };
+export class UseSignUp implements UseSignUpInterface {
+  private readonly signUpUseCase: ReturnType<typeof useDI>['signUpUseCase'];
+  private readonly credentialFactory: ReturnType<typeof useDI>['credentialFactory'];
 
-  return { signUp };
-};
+  constructor() {
+    const { credentialFactory, signUpUseCase } = useDI();
+    this.signUpUseCase = signUpUseCase;
+    this.credentialFactory = credentialFactory;
+  }
 
-export default useSignUp;
+  async execute(email: string, password: string): Promise<void> {
+    const credential = this.credentialFactory(new Email(email), new Password(password));
+    await this.signUpUseCase.execute(credential);
+  }
+}
