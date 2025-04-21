@@ -15,7 +15,7 @@ import Container from '@/_components/mui/Container';
 import Stack from '@/_components/mui/Stack';
 import TaskProgress from '@/_components/organisms/TaskProgress';
 import { Todo } from '@/domain/todo';
-import useSignOut from '@/hooks/useSignOut';
+import { UseSignOut } from '@/hooks/useSignOut';
 import { useTodo } from '@/hooks/useTodo';
 
 type TodoFormProps = {
@@ -24,6 +24,7 @@ type TodoFormProps = {
 
 const Top = () => {
   const router = useRouter();
+  const signOut = new UseSignOut();
   const { todos, addTodo, updateTodo } = useTodo();
   const { showError } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<TodoFormProps>({
@@ -31,7 +32,6 @@ const Top = () => {
       content: '',
     },
   });
-  const { signOut } = useSignOut();
 
   const createTodo: SubmitHandler<TodoFormProps> = async (todoForm) => {
     try {
@@ -62,9 +62,8 @@ const Top = () => {
     >
       <Button
         onClick={() => {
-          signOut().then(() => {
-            router.push('/signin');
-          });
+          signOut.execute('test@example.com');
+          router.push('/signin');
         }}
         sx={{
           position: 'absolute',

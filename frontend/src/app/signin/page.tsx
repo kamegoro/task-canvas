@@ -18,7 +18,7 @@ import Box from '@/_components/mui/Box';
 import Button from '@/_components/mui/Button';
 import Stack from '@/_components/mui/Stack';
 import RegistrationFormBox from '@/_components/organisms/RegistrationFormBox';
-import useSignIn from '@/hooks/useSignIn';
+import { UseSignIn } from '@/hooks/useSignIn';
 
 type InputProps = {
   email: string;
@@ -27,7 +27,7 @@ type InputProps = {
 
 const SignIn = () => {
   const router = useRouter();
-  const { signIn } = useSignIn();
+  const signin = new UseSignIn();
   const { showError, showSuccess } = useSnackbar();
   const {
     control,
@@ -45,7 +45,7 @@ const SignIn = () => {
   const onSubmit: SubmitHandler<InputProps> = async (values) => {
     try {
       setIsLoading(true);
-      await signIn(values);
+      await signin.execute(values.email, values.password);
       router.push('/');
       showSuccess('ログインに成功しました');
     } catch (error) {

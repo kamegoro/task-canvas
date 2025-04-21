@@ -16,7 +16,7 @@ import Box from '@/_components/mui/Box';
 import Button from '@/_components/mui/Button';
 import Stack from '@/_components/mui/Stack';
 import RegistrationFormBox from '@/_components/organisms/RegistrationFormBox';
-import useSignUp from '@/hooks/useSignUp';
+import { UseSignUp } from '@/hooks/useSignUp';
 
 type InputProps = {
   email: string;
@@ -25,8 +25,8 @@ type InputProps = {
 
 const SignUp = () => {
   const router = useRouter();
+  const signUp = new UseSignUp();
   const { showError, showSuccess } = useSnackbar();
-  const { signUp } = useSignUp();
   const { control, handleSubmit } = useForm<InputProps>({
     defaultValues: {
       email: '',
@@ -38,7 +38,7 @@ const SignUp = () => {
   const onSubmit: SubmitHandler<InputProps> = async (values) => {
     try {
       setIsLoading(true);
-      await signUp(values);
+      await signUp.execute(values.email, values.password);
       router.push('/signin');
       showSuccess('アカウント作成に成功しました');
     } catch (e) {
