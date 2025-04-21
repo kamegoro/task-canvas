@@ -3,6 +3,7 @@
 import { ThemeProvider } from '@mui/material';
 
 import { SnackbarProvider } from '@/_components/contexts/SnackbarContext';
+import DiProvider from '@/context/DIContext';
 import theme from '@/styles/theme';
 
 export default function RootLayout({
@@ -14,9 +15,9 @@ export default function RootLayout({
     <html lang="ja">
       <body style={{ margin: 0 }}>
         <ThemeProvider theme={theme}>
-          <SnackbarProvider>
-            <div>{children}</div>
-          </SnackbarProvider>
+          <DiProvider>
+            <SnackbarProvider>{children}</SnackbarProvider>
+          </DiProvider>
         </ThemeProvider>
       </body>
     </html>
