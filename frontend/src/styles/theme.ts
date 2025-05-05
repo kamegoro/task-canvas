@@ -1,14 +1,6 @@
 import { createTheme } from '@mui/material';
-import {
-  BrandColors,
-  BrandColorOptions,
-  GrayColors,
-  GrayColorOptions,
-  IconColors,
-  IconColorOptions,
-} from '@mui/material/styles/createPalette';
 
-declare module '@mui/material/styles/createPalette' {
+declare module '@mui/material/styles' {
   interface BrandColors {
     primary: string;
     white: string;
