@@ -14,8 +14,7 @@ import Calender from '@/_components/mui/Calendar';
 import Container from '@/_components/mui/Container';
 import Stack from '@/_components/mui/Stack';
 import TaskProgress from '@/_components/organisms/TaskProgress';
-import { Todo } from '@/domain/todo';
-import { UseSignOut } from '@/hooks/useSignOut';
+import { useSignOut } from '@/hooks/useSignOut';
 import { useTodo } from '@/hooks/useTodo';
 
 type TodoFormProps = {
@@ -24,7 +23,7 @@ type TodoFormProps = {
 
 const Top = () => {
   const router = useRouter();
-  const signOut = new UseSignOut();
+  const { execute } = useSignOut();
   const { todos, addTodo, updateTodo } = useTodo();
   const { showError } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<TodoFormProps>({
@@ -44,8 +43,8 @@ const Top = () => {
   };
 
   const handleChangeCheckbox = (
-    id: Todo['id'],
-    content: Todo['content'],
+    id: string,
+    content: string,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     updateTodo(id, content, event.target.checked);
@@ -62,7 +61,7 @@ const Top = () => {
     >
       <Button
         onClick={() => {
-          signOut.execute('test@example.com');
+          execute('test@example.com');
           router.push('/signin');
         }}
         sx={{
