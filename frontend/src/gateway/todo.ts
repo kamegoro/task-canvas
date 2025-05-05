@@ -1,67 +1,45 @@
-import { Todo } from '@/domain/todo';
-import {
-  getTodos as getTodosDriver,
-  createTodo as createTodoDriver,
-  CreateDriverRequest,
-  updateTodoDriver,
-  UpdateDriverRequest,
-} from '@/driver';
+import { Todos, Todo, TodoCompleted, TodoContent, TodoId, RegisterTodo } from '@/domain/todo';
+import { ApiRoutesDriver } from '@/driver';
+import { TodoPort } from '@/port/todoPort';
 
-interface TodoGatewayInterface {
-  getTodos: () => Promise<Todo[]>;
-  createTodo: (content: Todo['content'], completed: Todo['completed']) => Promise<Todo>;
-  updateTodo: (
-    id: Todo['id'],
-    content: Todo['content'],
-    completed: Todo['completed'],
-  ) => Promise<void>;
-}
+export default class TodoGateway implements TodoPort {
+  private readonly apiRoutesDriver: ApiRoutesDriver;
 
-export default class TodoGateway implements TodoGatewayInterface {
-  async getTodos(): Promise<Todo[]> {
-    const driverTodos = await getTodosDriver();
+  constructor(apiRoutesDriver: ApiRoutesDriver) {
+    this.apiRoutesDriver = apiRoutesDriver;
+  }
 
-    const todos = (driverTodos ?? []).map((driverTodo) => {
-      const todo: Todo = {
-        id: driverTodo.id,
-        content: driverTodo.content,
-        completed: driverTodo.completed,
-      };
+  async getTodos(): Promise<Todos> {
+    const driverTodos = await this.apiRoutesDriver.getTodos();
 
-      return todo;
+    const todos: Todo[] = driverTodos.map((driverTodo) => {
+      return new Todo(
+        new TodoId(driverTodo.id),
+        new TodoContent(driverTodo.content),
+        new TodoCompleted(driverTodo.completed),
+        this,
+      );
     });
 
-    return todos;
+    return new Todos(todos);
   }
 
-  async createTodo(content: Todo['content'], completed: Todo['completed']): Promise<Todo> {
-    const requestTodo: CreateDriverRequest = {
-      content: content,
-      completed: completed,
-    };
-
-    const driverTodoId = await createTodoDriver(requestTodo);
-
-    const todo: Todo = {
-      id: driverTodoId,
-      content: content,
-      completed: completed,
-    };
-
-    return todo;
+  async storeTodo(registerTodo: RegisterTodo): Promise<void> {
+    await this.apiRoutesDriver.createTodo({
+      content: registerTodo.getContent(),
+      completed: registerTodo.getCompleted(),
+    });
   }
 
-  async updateTodo(
-    id: Todo['id'],
-    content: Todo['content'],
-    completed: Todo['completed'],
-  ): Promise<void> {
-    const updateTodoForDriver: UpdateDriverRequest = {
-      id: id,
-      content: content,
-      completed: completed,
-    };
+  async updateTodo(todo: Todo): Promise<void> {
+    await this.apiRoutesDriver.updateTodo({
+      id: todo.getId(),
+      content: todo.getContent(),
+      completed: todo.getCompleted(),
+    });
+  }
 
-    await updateTodoDriver(updateTodoForDriver);
+  async deleteTodo(todoId: TodoId): Promise<void> {
+    await this.apiRoutesDriver.deleteTodo(todoId.getValue());
   }
 }
