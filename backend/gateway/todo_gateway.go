@@ -53,16 +53,8 @@ func (g *TodoGateway) Store(ctx context.Context, todo domain.Todo) error {
 
 	defer func() {
 		if p := recover(); p != nil {
-			if rerr := tx.Rollback(ctx); rerr != nil {
-				panic(rerr)
-			}
+			_ = tx.Rollback(ctx)
 			panic(p)
-		} else if err != nil {
-			if rerr := tx.Rollback(ctx); rerr != nil {
-				panic(rerr)
-			}
-		} else {
-			err = tx.Commit(ctx)
 		}
 	}()
 
@@ -75,6 +67,7 @@ func (g *TodoGateway) Store(ctx context.Context, todo domain.Todo) error {
 	})
 
 	if err != nil {
+		_ = tx.Rollback(ctx)
 		return err
 	}
 
@@ -82,7 +75,13 @@ func (g *TodoGateway) Store(ctx context.Context, todo domain.Todo) error {
 		UserID: uuid.UUID(todo.UserId),
 		TodoID: uuid.UUID(todo.ID),
 	})
+
 	if err != nil {
+		_ = tx.Rollback(ctx)
+		return err
+	}
+
+	if err = tx.Commit(ctx); err != nil {
 		return err
 	}
 
