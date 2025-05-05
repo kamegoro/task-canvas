@@ -1,12 +1,18 @@
 import { Todo } from '@/domain/todo';
-import TodoGateway from '@/gateway/todo';
+import { TodoPort } from '@/port/todoPort';
 
-export const updateTodo = async (
-  id: Todo['id'],
-  content: Todo['content'],
-  completed: Todo['completed'],
-): Promise<void> => {
-  const todoGateway = new TodoGateway();
+interface UpdateTodoUseCaseInterface {
+  execute: (todo: Todo) => Promise<void>;
+}
 
-  await todoGateway.updateTodo(id, content, completed);
-};
+export class UpdateTodoUseCase implements UpdateTodoUseCaseInterface {
+  private readonly todoPort: TodoPort;
+
+  constructor(todoPort: TodoPort) {
+    this.todoPort = todoPort;
+  }
+
+  async execute(todo: Todo): Promise<void> {
+    await this.todoPort.updateTodo(todo);
+  }
+}
