@@ -22,7 +22,7 @@
     "next": "15.3.1",
     "react": "19",
     "react-dom": "19",
-    "react-hook-form": "7.55.0"
+    "react-hook-form": "7.56.2"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.5",
