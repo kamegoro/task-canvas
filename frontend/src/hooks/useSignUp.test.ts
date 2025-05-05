@@ -1,24 +1,40 @@
-import { act, renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 
-import { signUp as signUpUseCase } from '@/useCase/signUpUseCase';
+import { Email, Password } from '@/domain/credential';
+import { useSignUp } from '@/hooks/useSignUp';
 
-import useSignUp from './useSignUp';
+const mockSignUpExecute = vi.fn();
+const mockCredentialFactory = vi.fn();
 
-vi.mock('@/useCase/signUpUseCase', () => ({
-  signUp: vi.fn(),
+vi.mock('@/context/DIContext', () => ({
+  useDI: () => ({
+    credentialFactory: mockCredentialFactory,
+    signUpUseCase: { execute: mockSignUpExecute },
+  }),
 }));
 
-const mockSignUp = vi.mocked(signUpUseCase);
+beforeEach(() => {
+  mockSignUpExecute.mockClear();
+  mockCredentialFactory.mockClear();
+});
 
 describe('useSignUp', () => {
   it('新しいユーザーを登録する', async () => {
+    const dummyCredential = { dummy: true };
+    mockCredentialFactory.mockReturnValue(dummyCredential);
+
     const { result } = renderHook(() => useSignUp());
 
-    act(async () => {
-      result.current.signUp({ email: 'test@example.com', password: 'test' });
+    await act(async () => {
+      await result.current.execute('test@example.com', 'testpassword');
     });
 
-    expect(mockSignUp).toHaveBeenCalledWith({ email: 'test@example.com', password: 'test' });
-    expect(mockSignUp).toBeCalledTimes(1);
+    expect(mockCredentialFactory).toHaveBeenCalledTimes(1);
+    const [emailArg, passwordArg] = mockCredentialFactory.mock.calls[0];
+    expect(emailArg).toBeInstanceOf(Email);
+    expect(passwordArg).toBeInstanceOf(Password);
+
+    expect(mockSignUpExecute).toHaveBeenCalledTimes(1);
+    expect(mockSignUpExecute).toHaveBeenCalledWith(dummyCredential);
   });
 });

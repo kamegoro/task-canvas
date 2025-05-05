@@ -1,72 +1,166 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 
 import { useTodo } from '@/hooks/useTodo';
-import { createTodo } from '@/useCase/createTodoUseCase';
-import { getTodos } from '@/useCase/getTodoUseCase';
-import { updateTodo as updateTodoUseCase } from '@/useCase/updateTodoUseCase';
 
-vi.mock('@/useCase/createTodoUseCase', () => ({
-  createTodo: vi.fn(),
+const mockRegisterTodoFactory = vi.fn();
+const mockTodoFactory = vi.fn();
+const mockGetTodosExecute = vi.fn();
+const mockStoreTodoExecute = vi.fn();
+const mockUpdateTodoExecute = vi.fn();
+
+const diMock = {
+  registerTodoFactory: mockRegisterTodoFactory,
+  todoFactory: mockTodoFactory,
+  getTodosUseCase: { execute: mockGetTodosExecute },
+  storeTodoUseCase: { execute: mockStoreTodoExecute },
+  updateTodoUseCase: { execute: mockUpdateTodoExecute },
+};
+
+vi.mock('@/context/DIContext', () => ({
+  useDI: () => diMock,
 }));
 
-vi.mock('@/useCase/getTodoUseCase', () => ({
-  getTodos: vi.fn(),
-}));
-
-vi.mock('@/useCase/updateTodoUseCase', () => ({
-  updateTodo: vi.fn(),
-}));
-
-const mockCreateTodo = vi.mocked(createTodo);
-const mockGetTodos = vi.mocked(getTodos);
-const mockUpdateTodoUseCase = vi.mocked(updateTodoUseCase);
+beforeEach(() => {
+  mockRegisterTodoFactory.mockClear();
+  mockTodoFactory.mockClear();
+  mockGetTodosExecute.mockClear();
+  mockStoreTodoExecute.mockClear();
+  mockUpdateTodoExecute.mockClear();
+});
 
 describe('useTodo', () => {
   it('マウント時にTodoを取得する', async () => {
-    const mockTodos = [
-      { id: '1', content: 'Todo 1', completed: false },
-      { id: '2', content: 'Todo 2', completed: true },
+    const mockTodo = {
+      getId: () => '1',
+      getContent: () => 'Todo 1',
+      getCompleted: () => false,
+    };
+
+    const mockTodosResponse = { value: [mockTodo] };
+    mockGetTodosExecute.mockResolvedValue(mockTodosResponse);
+
+    const expected = [
+      {
+        id: '1',
+        content: 'Todo 1',
+        completed: false,
+      },
     ];
-    mockGetTodos.mockResolvedValue(mockTodos);
 
     const { result } = renderHook(() => useTodo());
 
-    await waitFor(() => expect(result.current.todos).toEqual(mockTodos));
+    await waitFor(() => expect(result.current.todos).toEqual(expected));
 
-    expect(result.current.todos).toEqual(mockTodos);
+    expect(mockGetTodosExecute).toHaveBeenCalledTimes(1);
   });
 
-  it('新しいTodoを追加する', async () => {
-    const newTodo = { id: '3', content: 'New Todo', completed: false };
-    mockCreateTodo.mockResolvedValue(newTodo);
+  it('新しいTodoを追加するとstateに反映される', async () => {
+    class MockInitialTodo {
+      getId = vi.fn().mockReturnValue('1');
+      getContent = vi.fn().mockReturnValue('Todo 1');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+    const initialTodosResponse = { value: [new MockInitialTodo()] };
+    mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
 
     const { result } = renderHook(() => useTodo());
 
-    await act(async () => {
-      result.current.addTodo(newTodo.content);
+    await waitFor(() => {
+      expect(result.current.todos).toStrictEqual([
+        {
+          id: '1',
+          content: 'Todo 1',
+          completed: false,
+        },
+      ]);
     });
 
-    expect(result.current.todos).toContainEqual(newTodo);
+    class MockRegisterTodoFactory {
+      getContent = vi.fn().mockReturnValue('Todo 2');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+
+    const mockRegisterTodo = new MockRegisterTodoFactory();
+    mockRegisterTodoFactory.mockReturnValueOnce(mockRegisterTodo);
+
+    mockStoreTodoExecute.mockResolvedValueOnce(undefined);
+    class MockNewTodo {
+      getId = vi.fn().mockReturnValue('2');
+      getContent = vi.fn().mockReturnValue('Todo 2');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+
+    const updatedTodosResponse = { value: [new MockInitialTodo(), new MockNewTodo()] };
+    mockGetTodosExecute.mockResolvedValue(updatedTodosResponse);
+
+    await act(async () => {
+      await result.current.addTodo('Todo 2');
+    });
+
+    await waitFor(() => {
+      expect(result.current.todos).toStrictEqual([
+        {
+          id: '1',
+          content: 'Todo 1',
+          completed: false,
+        },
+        {
+          id: '2',
+          content: 'Todo 2',
+          completed: false,
+        },
+      ]);
+    });
+
+    expect(mockStoreTodoExecute).toHaveBeenCalledTimes(1);
+    expect(mockStoreTodoExecute).toHaveBeenCalledWith(mockRegisterTodo);
+    expect(mockGetTodosExecute).toHaveBeenCalledTimes(2);
   });
 
   it('既存のTodoを更新する', async () => {
-    const initialTodos = [
-      { id: '1', content: 'Todo 1', completed: false },
-      { id: '2', content: 'Todo 2', completed: true },
-    ];
-    mockGetTodos.mockResolvedValue(initialTodos);
+    class MockInitialTodo {
+      getId = vi.fn().mockReturnValue('1');
+      getContent = vi.fn().mockReturnValue('Todo 1');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+    const initialTodosResponse = { value: [new MockInitialTodo()] };
+    mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
 
     const { result } = renderHook(() => useTodo());
 
-    await waitFor(() => expect(result.current.todos).toEqual(initialTodos));
-
-    const updatedTodo = { ...initialTodos[0], completed: true };
-    mockUpdateTodoUseCase.mockResolvedValue();
-
-    await act(async () => {
-      result.current.updateTodo(updatedTodo.id, updatedTodo.content, updatedTodo.completed);
+    await waitFor(() => {
+      expect(result.current.todos).toStrictEqual([
+        {
+          id: '1',
+          content: 'Todo 1',
+          completed: false,
+        },
+      ]);
     });
 
-    expect(result.current.todos).toContainEqual(updatedTodo);
+    class MockUpdatedTodo {
+      getId = vi.fn().mockReturnValue('1');
+      getContent = vi.fn().mockReturnValue('Updated Todo 1');
+      getCompleted = vi.fn().mockReturnValue(true);
+    }
+    const mockUpdatedTodo = new MockUpdatedTodo();
+    mockTodoFactory.mockReturnValueOnce(mockUpdatedTodo);
+
+    mockTodoFactory.mockReturnValueOnce(mockUpdatedTodo);
+    mockUpdateTodoExecute.mockResolvedValueOnce(undefined);
+
+    await act(async () => {
+      await result.current.updateTodo('1', 'Updated Todo 1', true);
+    });
+
+    await waitFor(() => {
+      expect(result.current.todos).toStrictEqual([
+        {
+          id: '1',
+          content: 'Updated Todo 1',
+          completed: true,
+        },
+      ]);
+    });
   });
 });

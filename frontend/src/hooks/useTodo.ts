@@ -1,44 +1,80 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-import { Todo } from '@/domain/todo';
-import { createTodo } from '@/useCase/createTodoUseCase';
-import { getTodos } from '@/useCase/getTodoUseCase';
-import { updateTodo as updateTodoUseCase } from '@/useCase/updateTodoUseCase';
+import { useDI } from '@/context/DIContext';
+import { TodoCompleted, TodoContent, TodoId } from '@/domain/todo';
 
-export const useTodo = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+type ViewTodo = {
+  id: string;
+  content: string;
+  completed: boolean;
+};
 
-  const addTodo = async (content: Todo['content']): Promise<void> => {
-    const result = await createTodo(content);
+interface UseTodoInterface {
+  todos: ViewTodo[];
+  addTodo: (content: string) => Promise<void>;
+  updateTodo: (id: string, content: string, completed: boolean) => Promise<void>;
+}
 
-    setTodos((prev) => {
-      return [...prev, result];
+export const useTodo = (): UseTodoInterface => {
+  const { registerTodoFactory, todoFactory, getTodosUseCase, storeTodoUseCase, updateTodoUseCase } =
+    useDI();
+  const [todos, setTodos] = useState<ViewTodo[]>([]);
+
+  const getTodos = useCallback(async (): Promise<ViewTodo[]> => {
+    const todos = await getTodosUseCase.execute();
+
+    const viewTodos: ViewTodo[] = todos.value.map((todo) => {
+      return {
+        id: todo.getId(),
+        content: todo.getContent(),
+        completed: todo.getCompleted(),
+      };
     });
-  };
 
-  const updateTodo = (id: Todo['id'], content: Todo['content'], completed: Todo['completed']) => {
-    updateTodoUseCase(id, content, completed).then(() => {
-      const newTodos = todos.map((todo) => {
-        if (id === todo.id) {
-          const newTodo: Todo = {
-            id: todo.id,
-            content: todo.content,
-            completed: completed,
-          };
-          return newTodo;
-        }
-        return todo;
-      });
+    return viewTodos;
+  }, [getTodosUseCase]);
 
+  const addTodo = useCallback(
+    async (content: string) => {
+      const registerTodo = registerTodoFactory(new TodoContent(content), new TodoCompleted(false));
+      await storeTodoUseCase.execute(registerTodo);
+
+      const newTodos = await getTodos();
       setTodos(newTodos);
-    });
-  };
+    },
+    [registerTodoFactory, storeTodoUseCase, getTodos],
+  );
+
+  const updateTodo = useCallback(
+    async (id: string, content: string, completed: boolean) => {
+      const todo = todoFactory(
+        new TodoId(id),
+        new TodoContent(content),
+        new TodoCompleted(completed),
+      );
+      await updateTodoUseCase.execute(todo);
+
+      setTodos((prevTodos) => {
+        return prevTodos.map((prevTodo) => {
+          if (prevTodo.id === id) {
+            return {
+              ...prevTodo,
+              content: content,
+              completed: completed,
+            };
+          }
+          return prevTodo;
+        });
+      });
+    },
+    [todoFactory, updateTodoUseCase],
+  );
 
   useEffect(() => {
     getTodos().then((result) => {
       setTodos(result);
     });
-  }, []);
+  }, [getTodos]);
 
   return { todos, addTodo, updateTodo };
 };
