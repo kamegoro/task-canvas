@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   run-storybook:
-    name: next-build
+    name: storybook-build
 
     timeout-minutes: 10
 
