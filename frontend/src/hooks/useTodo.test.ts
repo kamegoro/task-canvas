@@ -163,4 +163,29 @@ describe('useTodo', () => {
       ]);
     });
   });
+
+  it('Todoの進捗率を取得する', async () => {
+    class MockInitialTodo1 {
+      getId = vi.fn().mockReturnValue('1');
+      getContent = vi.fn().mockReturnValue('Todo 1');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+
+    class MockInitialTodo2 {
+      getId = vi.fn().mockReturnValue('2');
+      getContent = vi.fn().mockReturnValue('Todo 2');
+      getCompleted = vi.fn().mockReturnValue(true);
+    }
+
+    const initialTodosResponse = { value: [new MockInitialTodo1(), new MockInitialTodo2()] };
+    mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
+    const { result } = renderHook(() => useTodo());
+
+    await waitFor(() => {
+      expect(result.current.progress).toStrictEqual({
+        totalCount: 2,
+        completedCount: 1,
+      })
+    })
+  })
 });

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import { useDI } from '@/context/DIContext';
 import { TodoCompleted, TodoContent, TodoId } from '@/domain/todo';
@@ -11,6 +11,10 @@ type ViewTodo = {
 
 interface UseTodoInterface {
   todos: ViewTodo[];
+  progress: {
+    totalCount: number;
+    completedCount: number;
+  };
   addTodo: (content: string) => Promise<void>;
   updateTodo: (id: string, content: string, completed: boolean) => Promise<void>;
 }
@@ -19,6 +23,16 @@ export const useTodo = (): UseTodoInterface => {
   const { registerTodoFactory, todoFactory, getTodosUseCase, storeTodoUseCase, updateTodoUseCase } =
     useDI();
   const [todos, setTodos] = useState<ViewTodo[]>([]);
+
+  const progress = useMemo(() => {
+    const completedCount = todos.filter((todo) => todo.completed).length;
+    const totalCount = todos.length;
+
+    return {
+      totalCount: totalCount,
+      completedCount: completedCount,
+    }
+  }, [todos]);
 
   const getTodos = useCallback(async (): Promise<ViewTodo[]> => {
     const todos = await getTodosUseCase.execute();
@@ -76,5 +90,5 @@ export const useTodo = (): UseTodoInterface => {
     });
   }, [getTodos]);
 
-  return { todos, addTodo, updateTodo };
+  return { todos, progress, addTodo, updateTodo };
 };
