@@ -16,6 +16,7 @@ import Stack from '@/_components/mui/Stack';
 import TaskProgress from '@/_components/organisms/TaskProgress';
 import { useSignOut } from '@/hooks/useSignOut';
 import { useTodo } from '@/hooks/useTodo';
+import Typography from '@/_components/mui/Typography';
 
 type TodoFormProps = {
   content: string;
@@ -24,7 +25,7 @@ type TodoFormProps = {
 const Top = () => {
   const router = useRouter();
   const { execute } = useSignOut();
-  const { todos, addTodo, updateTodo } = useTodo();
+  const { todos, progress, addTodo, updateTodo } = useTodo();
   const { showError } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<TodoFormProps>({
     defaultValues: {
@@ -153,10 +154,20 @@ const Top = () => {
               opacity: 0.1,
             }}
           />
-          <TaskProgress
-            allCount={100}
-            currentCount={10}
-          />
+          <Box
+            sx={{
+              display: 'flex',
+              marginLeft: 1,
+              fontSize: 14,
+              color: '#6c757d',
+            }}
+          >
+            <Box sx={{ marginRight: 2 }}>達成率</Box>
+            <TaskProgress
+              allCount={progress.totalCount}
+              currentCount={progress.completedCount}
+            />
+          </Box>
           <Box sx={{ marginTop: 3 }}>
             {todos.map((todo, i) => {
               return (
