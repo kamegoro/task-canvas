@@ -13,19 +13,19 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "github-actions"
-    directory: "/.github"
+    directory: ".github"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
 
   - package-ecosystem: "docker"
-    directory: "/frontend"
+    directory: "frontend/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
 
   - package-ecosystem: "docker"
-    directory: "/backend"
+    directory: "backend/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
