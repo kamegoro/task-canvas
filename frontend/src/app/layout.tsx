@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from '@/_components/contexts/SnackbarContext';
 import DiProvider from '@/context/DIContext';
 import theme from '@/styles/theme';
+import Box from '@/_components/mui/Box';
 
 export default function RootLayout({
   children,
@@ -16,7 +17,9 @@ export default function RootLayout({
       <body style={{ margin: 0 }}>
         <ThemeProvider theme={theme}>
           <DiProvider>
-            <SnackbarProvider>{children}</SnackbarProvider>
+            <SnackbarProvider>
+              <Box suppressContentEditableWarning>{children}</Box>
+            </SnackbarProvider>
           </DiProvider>
         </ThemeProvider>
       </body>
