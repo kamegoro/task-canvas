@@ -43,6 +43,7 @@ func main() {
 
 	apiGroup := e.Group("/v1")
 	apiGroup.Use(middleware.ValidateJWT)
+	apiGroup.GET("/users/me", rest.GetUsersMe, middleware.GenerateJwt)
 	apiGroup.POST("/verifyToken", rest.VerifyToken, middleware.GenerateJwt)
 	apiGroup.GET("/todos", rest.GetTodos, middleware.GenerateJwt)
 	apiGroup.POST("/todos", rest.PostTodos, middleware.GenerateJwt)
