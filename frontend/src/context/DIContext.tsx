@@ -1,30 +1,27 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { Credential } from '@/domain/credential';
-import { RegisterTodo, Todo } from '@/domain/todo';
-import { User } from '@/domain/user';
 import { ApiRoutesDriver } from '@/driver';
 import { CredentialGateway } from '@/gateway/credential';
+import { RegisterTodoGateway } from '@/gateway/registerTodoGateway';
 import { SignOutGateway } from '@/gateway/signOutGateway';
 import TodoGateway from '@/gateway/todo';
+import { UserGateway } from '@/gateway/userGateway';
 import { GetTodosUseCase } from '@/useCase/getTodosUseCase';
-import { SignInUseCaseImpl } from '@/useCase/signInUseCase';
+import { GetUserUseCase } from '@/useCase/getUserUseCase';
+import { SignInUseCase } from '@/useCase/signInUseCase';
 import { SignOutUseCase } from '@/useCase/signOutUseCase';
 import { SignUpUseCase } from '@/useCase/signUpUseCase';
 import { StoreTodoUseCase } from '@/useCase/storeTodoUseCase';
 import { UpdateTodoUseCase } from '@/useCase/updateTodoUseCase';
 
 type DIContainer = {
-  credentialFactory: ReturnType<typeof Credential.factory>;
-  userFactory: ReturnType<typeof User.factory>;
-  todoFactory: ReturnType<typeof Todo.factory>;
-  registerTodoFactory: ReturnType<typeof RegisterTodo.factory>;
-  signInUseCase: SignInUseCaseImpl;
-  signUpUseCase: SignInUseCaseImpl;
+  signInUseCase: SignInUseCase;
+  signUpUseCase: SignUpUseCase;
   signOutUseCase: SignOutUseCase;
   getTodosUseCase: GetTodosUseCase;
   storeTodoUseCase: StoreTodoUseCase;
   updateTodoUseCase: UpdateTodoUseCase;
+  getUserUseCase: GetUserUseCase;
 };
 
 const DIContext = createContext<DIContainer | null>(null);
@@ -42,32 +39,27 @@ const DiProvider = ({ children }: { children: React.ReactNode }) => {
     const apiRouteDriver = new ApiRoutesDriver('http://localhost:3000');
 
     const credentialGateway = new CredentialGateway(apiRouteDriver);
-    const signOutGateway = new SignOutGateway(apiRouteDriver);
     const todoGateway = new TodoGateway(apiRouteDriver);
+    const userGateway = new UserGateway(apiRouteDriver);
+    const signOutGateway = new SignOutGateway(apiRouteDriver);
+    const registerTodoGateway = new RegisterTodoGateway(apiRouteDriver);
 
-    const credentialFactory = Credential.factory(credentialGateway);
-    const userFactory = User.factory(signOutGateway);
-    const todoFactory = Todo.factory(todoGateway);
-    const registerTodoFactory = RegisterTodo.factory(todoGateway);
-
-    const signInUseCase = new SignInUseCaseImpl();
-    const signUpUseCase = new SignUpUseCase();
-    const signOutUseCase = new SignOutUseCase();
+    const signInUseCase = new SignInUseCase(credentialGateway);
+    const signUpUseCase = new SignUpUseCase(credentialGateway);
+    const signOutUseCase = new SignOutUseCase(signOutGateway);
     const getTodosUseCase = new GetTodosUseCase(todoGateway);
-    const storeTodoUseCase = new StoreTodoUseCase();
+    const storeTodoUseCase = new StoreTodoUseCase(registerTodoGateway);
     const updateTodoUseCase = new UpdateTodoUseCase(todoGateway);
+    const getUserUseCase = new GetUserUseCase(userGateway);
 
     return {
-      credentialFactory,
-      userFactory,
-      todoFactory,
-      registerTodoFactory,
       signInUseCase,
       signUpUseCase,
       signOutUseCase,
       getTodosUseCase,
       storeTodoUseCase,
       updateTodoUseCase,
+      getUserUseCase,
     };
   }, []);
 
