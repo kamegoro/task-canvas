@@ -31,7 +31,7 @@ export const useTodo = (): UseTodoInterface => {
     return {
       totalCount: totalCount,
       completedCount: completedCount,
-    }
+    };
   }, [todos]);
 
   const getTodos = useCallback(async (): Promise<ViewTodo[]> => {

@@ -185,7 +185,7 @@ describe('useTodo', () => {
       expect(result.current.progress).toStrictEqual({
         totalCount: 2,
         completedCount: 1,
-      })
-    })
-  })
+      });
+    });
+  });
 });
