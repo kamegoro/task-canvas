@@ -1,20 +1,13 @@
-import { SignOutPort } from '@/port/signOutPort';
-
 import { Email } from './credential';
 
 export class User {
-  constructor(
-    private readonly email: Email,
-    private signOutPort: SignOutPort,
-  ) {}
+  constructor(private readonly email: Email) {}
 
-  static factory(signOutPort: SignOutPort): (email: Email) => User {
-    return (email: Email) => {
-      return new User(email, signOutPort);
-    };
+  static factory(email: Email): User {
+    return new User(email);
   }
 
-  signOut(): void {
-    this.signOutPort.signOut();
+  getEmail(): Email {
+    return this.email;
   }
 }

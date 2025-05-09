@@ -1,5 +1,3 @@
-import { TodoPort } from '@/port/todoPort';
-
 export class TodoId {
   private readonly value: string;
 
@@ -40,16 +38,7 @@ export class Todo {
     private id: TodoId,
     private content: TodoContent,
     private completed: TodoCompleted,
-    private todoPort: TodoPort,
   ) {}
-
-  static factory(
-    todoPort: TodoPort,
-  ): (todoId: TodoId, todoContent: TodoContent, todoCompleted: TodoCompleted) => Todo {
-    return (todoId: TodoId, todoContent: TodoContent, todoCompleted: TodoCompleted) => {
-      return new Todo(todoId, todoContent, todoCompleted, todoPort);
-    };
-  }
 
   getId(): string {
     return this.id.getValue();
@@ -76,26 +65,17 @@ export class RegisterTodo {
   constructor(
     private readonly content: TodoContent,
     private readonly completed: TodoCompleted,
-    private readonly todoPort: TodoPort,
   ) {}
 
-  static factory(
-    todoPort: TodoPort,
-  ): (content: TodoContent, completed: TodoCompleted) => RegisterTodo {
-    return (content: TodoContent, completed: TodoCompleted) => {
-      return new RegisterTodo(content, completed, todoPort);
-    };
+  static factory(content: TodoContent, completed: TodoCompleted): RegisterTodo {
+    return new RegisterTodo(content, completed);
   }
 
-  getContent(): string {
-    return this.content.getValue();
+  getContent(): TodoContent {
+    return this.content;
   }
 
-  getCompleted(): boolean {
-    return this.completed.getValue();
-  }
-
-  async register(): Promise<void> {
-    this.todoPort.storeTodo(this);
+  getCompleted(): TodoCompleted {
+    return this.completed;
   }
 }

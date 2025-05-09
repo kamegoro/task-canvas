@@ -1,5 +1,3 @@
-import { CredentialPort } from '@/port/credentialPort';
-
 export class Email {
   private readonly value: string;
 
@@ -28,13 +26,10 @@ export class Credential {
   constructor(
     private email: Email,
     private password: Password,
-    private credentialPort: CredentialPort,
   ) {}
 
-  static factory(credentialPort: CredentialPort): (email: Email, password: Password) => Credential {
-    return (email: Email, password: Password) => {
-      return new Credential(email, password, credentialPort);
-    };
+  factory(email: Email, password: Password): Credential {
+    return new Credential(email, password);
   }
 
   getEmail(): string {
@@ -43,20 +38,5 @@ export class Credential {
 
   getPassword(): string {
     return this.password.getValue();
-  }
-
-  getCredential(): { email: Email; password: Password } {
-    return {
-      email: this.email,
-      password: this.password,
-    };
-  }
-
-  signIn(): Promise<void> {
-    return this.credentialPort.signIn(this);
-  }
-
-  signUp(): Promise<void> {
-    return this.credentialPort.signUp(this);
   }
 }
