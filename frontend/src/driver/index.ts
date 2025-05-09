@@ -1,3 +1,7 @@
+type DriverUser = {
+  email: string;
+};
+
 type DriverTodo = {
   id: string;
   content: string;
@@ -20,6 +24,7 @@ export type UpdateDriverRequest = {
 };
 
 interface ApiRouteDriverInterface {
+  getUser(): Promise<DriverUser>;
   getTodos(): Promise<DriverTodos>;
   createTodo(request: CreateDriverRequest): Promise<CreateTodoResult>;
   updateTodo(request: UpdateDriverRequest): Promise<void>;
@@ -34,6 +39,13 @@ export class ApiRoutesDriver implements ApiRouteDriverInterface {
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
+  }
+
+  async getUser(): Promise<DriverUser> {
+    const response = await fetch(`${this.baseUrl}/api/v1/users/me`);
+    const json = await response.json();
+
+    return json;
   }
 
   async getTodos(): Promise<DriverTodos> {
