@@ -3,9 +3,10 @@
 import { ThemeProvider } from '@mui/material';
 
 import { SnackbarProvider } from '@/_components/contexts/SnackbarContext';
+import { UserProvider } from '@/_components/contexts/UserContext';
+import Box from '@/_components/mui/Box';
 import DiProvider from '@/context/DIContext';
 import theme from '@/styles/theme';
-import Box from '@/_components/mui/Box';
 
 export default function RootLayout({
   children,
@@ -17,9 +18,11 @@ export default function RootLayout({
       <body style={{ margin: 0 }}>
         <ThemeProvider theme={theme}>
           <DiProvider>
-            <SnackbarProvider>
-              <Box suppressContentEditableWarning>{children}</Box>
-            </SnackbarProvider>
+            <UserProvider>
+              <SnackbarProvider>
+                <Box suppressContentEditableWarning>{children}</Box>
+              </SnackbarProvider>
+            </UserProvider>
           </DiProvider>
         </ThemeProvider>
       </body>

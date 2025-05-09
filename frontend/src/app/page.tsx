@@ -16,7 +16,6 @@ import Stack from '@/_components/mui/Stack';
 import TaskProgress from '@/_components/organisms/TaskProgress';
 import { useSignOut } from '@/hooks/useSignOut';
 import { useTodo } from '@/hooks/useTodo';
-import Typography from '@/_components/mui/Typography';
 
 type TodoFormProps = {
   content: string;
@@ -106,6 +105,7 @@ const Top = () => {
             <Stack
               component={'form'}
               onSubmit={handleSubmit(createTodo)}
+              aria-label="todo-form"
             >
               <Controller
                 name="content"
@@ -129,6 +129,7 @@ const Top = () => {
                         top: '15px',
                         right: '90px',
                       }}
+                      name="calendar"
                     />
                     <Button
                       type="submit"
@@ -137,7 +138,7 @@ const Top = () => {
                         top: '10px',
                         right: '20px',
                       }}
-                      disabled={!isValid}
+                      disabled={!isValid || !field.value}
                     >
                       Add
                     </Button>
