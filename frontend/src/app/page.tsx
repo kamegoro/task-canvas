@@ -61,7 +61,7 @@ const Top = () => {
     >
       <Button
         onClick={() => {
-          execute('test@example.com');
+          execute();
           router.push('/signin');
         }}
         sx={{
