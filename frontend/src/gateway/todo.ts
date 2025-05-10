@@ -17,7 +17,6 @@ export default class TodoGateway implements TodoPort {
         new TodoId(driverTodo.id),
         new TodoContent(driverTodo.content),
         new TodoCompleted(driverTodo.completed),
-        this,
       );
     });
 
@@ -26,8 +25,8 @@ export default class TodoGateway implements TodoPort {
 
   async storeTodo(registerTodo: RegisterTodo): Promise<void> {
     await this.apiRoutesDriver.createTodo({
-      content: registerTodo.getContent(),
-      completed: registerTodo.getCompleted(),
+      content: registerTodo.getContent().getValue(),
+      completed: registerTodo.getCompleted().getValue(),
     });
   }
 
