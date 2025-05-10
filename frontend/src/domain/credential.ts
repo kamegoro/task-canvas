@@ -28,7 +28,7 @@ export class Credential {
     private password: Password,
   ) {}
 
-  factory(email: Email, password: Password): Credential {
+  static factory(email: Email, password: Password): Credential {
     return new Credential(email, password);
   }
 

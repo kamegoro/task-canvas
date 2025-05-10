@@ -40,6 +40,10 @@ export class Todo {
     private completed: TodoCompleted,
   ) {}
 
+  static factory(id: TodoId, content: TodoContent, completed: TodoCompleted): Todo {
+    return new Todo(id, content, completed);
+  }
+
   getId(): string {
     return this.id.getValue();
   }
