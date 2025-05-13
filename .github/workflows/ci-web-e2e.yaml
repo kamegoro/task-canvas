@@ -40,7 +40,7 @@ jobs:
           path: task-canvas-e2e
 
       - name: Install asdf
-        uses: asdf-vm/actions/setup@v4
+        uses: asdf-vm/actions/setup@v4.0.2
 
       - name: Install k8s-infrastructure tools
         run: |
