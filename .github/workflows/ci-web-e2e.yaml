@@ -47,13 +47,6 @@ jobs:
           repository: kamegoro/task-canvas-e2e
           path: task-canvas-e2e
 
-      - name: Check directory structure
-        run: |
-          echo "Listing top-level directories:"
-          find . -maxdepth 1 -type d | sort
-          echo "Listing second-level directories:"
-          find . -maxdepth 2 -type d | sort
-
       - name: Install asdf
         run: |
           sudo apt-get update && sudo apt-get install -y jq
@@ -126,6 +119,12 @@ jobs:
         run: |
           minikube status
           kubectl get pods --all-namespaces
+
+      - name: Install Gauge
+        run: |
+          asdf plugin-add gauge || true
+          asdf install gauge || asdf install gauge latest
+          gauge --version
 
       - name: Run E2E Web Tests
         run: |
