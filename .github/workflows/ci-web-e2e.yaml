@@ -122,8 +122,10 @@ jobs:
 
       - name: Install Gauge
         run: |
-          asdf plugin-add gauge || true
-          asdf install gauge || asdf install gauge latest
+          source "$HOME/.asdf/asdf.sh"
+
+          asdf plugin-add gauge https://github.com/getgauge/asdf-gauge.git || true
+          asdf install gauge latest
           gauge --version
 
       - name: Run E2E Web Tests
