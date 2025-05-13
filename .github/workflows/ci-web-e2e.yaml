@@ -130,5 +130,5 @@ jobs:
       - name: Run E2E Web Tests
         run: |
           cd task-canvas-e2e
-          mvn execute:gauge -DspecsDir=specs/task-canvas-web/
+          mvn gauge:execute -DspecsDir=specs/task-canvas-web/
           echo "E2E Web tests completed"
