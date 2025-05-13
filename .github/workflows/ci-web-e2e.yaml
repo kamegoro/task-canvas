@@ -124,7 +124,7 @@ jobs:
         run: |
           source "$HOME/.asdf/asdf.sh"
 
-          asdf plugin-add gauge https://github.com/getgauge/asdf-gauge.git || true
+          asdf plugin add gauge https://github.com/yysushi/asdf-gauge.git || true
           asdf install gauge latest
           gauge --version
 
