@@ -37,9 +37,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: kamegoro/task-canvas-e2e
+          path: task-canvas-e2e
 
       - name: Install asdf
-        uses: asdf-vm/actions/install@v4
+        uses: asdf-vm/actions/setup@v4
 
       - name: Install k8s-infrastructure tools
         run: |
