@@ -92,8 +92,35 @@ jobs:
 
       - name: Deploy k8s resources
         run: |
-          cd k8s-infrastructure
-          skaffold dev -p task-canvas-web-e2e --port-forward
+          cd k8s-infrastructurej
+
+          nohup skaffold dev -p task-canvas-web-e2e --port-forward > skaffold.log 2>&1 &
+          echo "Skaffold started. Waiting a few seconds before checking pod statuses..."
+          sleep 5
+
+      - name: Wait for pods to be ready
+        run: |
+          max_attempts=30
+          attempt=1
+          ready=false
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts: Checking pod statuses..."
+            not_ready=$(kubectl get pods --all-namespaces --no-headers | awk '{print $4}' | grep -v "^Running$" | wc -l)
+            if [ "$not_ready" -eq 0 ]; then
+              echo "All pods are running."
+              ready=true
+              break
+            else
+              echo "$not_ready pods are not ready, waiting..."
+              sleep 5
+            fi
+            attempt=$((attempt+1))
+          done
+
+          if [ "$ready" != "true" ]; then
+            echo "Pods did not become ready in time, exiting."
+            exit 1
+          fi
 
       - name: Check if minikube is running
         run: |
