@@ -71,7 +71,7 @@ jobs:
           echo "Installed tools:"
           asdf list
 
-      - name: Install sdkman
+      - name: Install task-canvas-e2e tools
         run: |
           curl -s "https://get.sdkman.io" | bash
           source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -79,6 +79,15 @@ jobs:
           sdk env install
           echo "java version"
           echo "maven version"
+
+          for tool in $(cut -d ' ' -f 1 .tool-versions | sort -u); do
+            echo "Adding plugin for: $tool"
+            asdf plugin-add "$tool" || true
+          done
+
+          asdf install
+          echo "Installed tools:"
+          asdf list
 
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
@@ -119,14 +128,6 @@ jobs:
         run: |
           minikube status
           kubectl get pods --all-namespaces
-
-      - name: Install Gauge
-        run: |
-          source "$HOME/.asdf/asdf.sh"
-
-          asdf plugin add gauge https://github.com/yysushi/asdf-gauge.git || true
-          asdf install gauge latest
-          gauge --version
 
       - name: Run E2E Web Tests
         run: |
