@@ -92,7 +92,7 @@ jobs:
 
       - name: Deploy k8s resources
         run: |
-          cd k8s-infrastructurej
+          cd k8s-infrastructure
 
           nohup skaffold dev -p task-canvas-web-e2e --port-forward > skaffold.log 2>&1 &
           echo "Skaffold started. Waiting a few seconds before checking pod statuses..."
