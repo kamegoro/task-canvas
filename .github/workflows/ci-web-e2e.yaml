@@ -47,6 +47,9 @@ jobs:
           source $HOME/.asdf/asdf.sh
           asdf version
 
+          echo "$HOME/.asdf/shims" >> $GITHUB_PATH
+          echo "$HOME/.asdf/bin" >> $GITHUB_PATH
+
       - name: Install k8s-infrastructure tools
         run: |
           cd k8s-infrastructure
