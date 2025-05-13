@@ -1,0 +1,76 @@
+name: "CI Web E2E"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - ".github/workflows/ci-web-e2e.yaml"
+      - "frontend/**"
+
+permissions:
+  contents: "read"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-web-e2e:
+    name: web-e2e
+
+    timeout-minutes: 15
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout task-canvas
+        uses: actions/checkout@v4
+
+      - name: Checkout k8s-infrastructure
+        uses: actions/checkout@v4
+        with:
+          repository: kamegoro/k8s-infrastructure
+          path: k8s-infrastructure
+
+      - name: Checkout task-canvas-e2e
+        uses: actions/checkout@v4
+        with:
+          repository: kamegoro/task-canvas-e2e
+
+      - name: Install asdf
+        uses: asdf-vm/actions/install@v4
+
+      - name: Install k8s-infrastructure tools
+        run: |
+          cd k8s-infrastructure
+          asdf install
+          echo "asdf list"
+
+      - name: Install sdkman
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          cd task-canvas-e2e
+          sdk env install
+          echo "java version"
+          echo "maven version"
+
+      - name: Start minikube
+        uses: medyagh/setup-minikube@latest
+
+      - name: Deploy k8s resources
+        run: |
+          cd k8s-infrastructure
+          skaffold dev -p task-canvas-web-e2e --port-forward
+
+      - name: Check if minikube is running
+        run: |
+          minikube status
+          kubectl get pods --all-namespaces
+
+      - name: Run E2E Web Tests
+        run: |
+          cd task-canvas-e2e
+          mvn execute:gauge -DspecsDir=specs/task-canvas-web/
+          echo "E2E Web tests completed"
