@@ -40,7 +40,13 @@ jobs:
           path: task-canvas-e2e
 
       - name: Install asdf
-        uses: asdf-vm/actions/setup@v4.0.2
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | jq -r .tag_name)"
+
+          echo '. $HOME/.asdf/asdf.sh' >> $GITHUB_ENV
+          source $HOME/.asdf/asdf.sh
+          asdf version
 
       - name: Install k8s-infrastructure tools
         run: |
