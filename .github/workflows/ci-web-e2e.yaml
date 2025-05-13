@@ -53,8 +53,15 @@ jobs:
       - name: Install k8s-infrastructure tools
         run: |
           cd k8s-infrastructure
+
+          for tool in $(cut -d ' ' -f 1 .tool-versions | sort -u); do
+            echo "Adding plugin for: $tool"
+            asdf plugin-add "$tool" || true
+          done
+
           asdf install
-          echo "asdf list"
+          echo "Installed tools:"
+          asdf list
 
       - name: Install sdkman
         run: |
