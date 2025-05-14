@@ -131,7 +131,7 @@ jobs:
 
           export GAUGE_ADDITIONAL_LIBS=target/test-classes
 
-          mvn clean test
+          mvn clean test-compile
 
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
 
