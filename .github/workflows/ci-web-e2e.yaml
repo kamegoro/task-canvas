@@ -128,13 +128,12 @@ jobs:
       - name: Run E2E Web Tests
         run: |
           cd task-canvas-e2e
+
           gauge uninstall java
           gauge install java --version 0.11.3
 
           mvn clean test-compile
 
-          ls -la target/test-classes
-          GAUGE_CUSTOM_CLASSPATH=target/test-classes mvn gauge:execute -DspecsDir=specs/task-canvas-web/
-
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
+
           echo "E2E Web tests completed"
