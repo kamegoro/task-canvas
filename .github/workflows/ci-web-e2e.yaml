@@ -129,9 +129,9 @@ jobs:
         run: |
           cd task-canvas-e2e
 
-          mvn clean test
-
           export GAUGE_ADDITIONAL_LIBS=target/test-classes
+
+          mvn clean test
 
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
 
