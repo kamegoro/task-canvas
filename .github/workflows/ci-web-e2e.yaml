@@ -133,5 +133,8 @@ jobs:
           gauge uninstall java
           gauge install java --version 0.11.3
 
+          ls -la target/classes
+          export CLASSPATH=target/classes:$CLASSPATH
+
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
           echo "E2E Web tests completed"
