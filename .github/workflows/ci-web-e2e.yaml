@@ -131,8 +131,6 @@ jobs:
 
           export GAUGE_ADDITIONAL_LIBS=target/test-classes
 
-          mvn clean test-compile
-
-          mvn gauge:execute -DspecsDir=specs/task-canvas-web/
+          mvn clean test-compile gauge:execute -DspecsDir=specs/task-canvas-web/
 
           echo "E2E Web tests completed"
