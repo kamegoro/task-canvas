@@ -76,14 +76,16 @@ jobs:
           curl -s "https://get.sdkman.io" | bash
           source "$HOME/.sdkman/bin/sdkman-init.sh"
           cd task-canvas-e2e
+
           sdk env install
-          echo "java version"
-          echo "maven version"
 
           asdf plugin add gauge https://github.com/yysushi/asdf-gauge.git
           asdf install
           echo "Installed tools:"
           asdf list
+
+          echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> $GITHUB_ENV
+          echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
 
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
