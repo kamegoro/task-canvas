@@ -108,7 +108,7 @@ jobs:
             echo "$pods"
 
             if [ -n "$pods" ]; then
-              not_ready=$(echo "$pods" | awk '{print $4}' | grep -v "^Running$" | wc -l)
+              not_ready=$(echo "$pods" | awk '{print $3}' | grep -v "^Running$" | wc -l)
               if [ "$not_ready" -eq 0 ]; then
                 echo "All pods are running."
                 ready=true
