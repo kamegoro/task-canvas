@@ -129,9 +129,9 @@ jobs:
         run: |
           cd task-canvas-e2e
 
-          export GAUGE_ADDITIONAL_LIBS=target/test-classes
+          export GAUGE_ADDITIONAL_LIBS=target/classes:target/test-classes
 
-          mvn clean test-compile
-          mvn gauge:execute -DspecsDir=specs/task-canvas-web/
+          mvn -X clean test-compile
+          mvn -X gauge:execute -DspecsDir=specs/task-canvas-web/
 
           echo "E2E Web tests completed"
