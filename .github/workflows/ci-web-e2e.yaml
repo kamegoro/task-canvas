@@ -90,11 +90,15 @@ jobs:
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
 
+      - name: Create CI namespace
+        run: |
+          kubectl create namespace ci-e2e || echo "Namespace ci-e2e already exists"
+
       - name: Deploy k8s resources
         run: |
           cd k8s-infrastructure
 
-          nohup skaffold dev -p task-canvas-web-e2e --port-forward > skaffold.log 2>&1 &
+          nohup skaffold dev -p task-canvas-web-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
           echo "Skaffold started. Waiting a few seconds before checking pod statuses..."
           sleep 5
 
@@ -105,7 +109,7 @@ jobs:
           ready=false
           while [ $attempt -le $max_attempts ]; do
             echo "Attempt $attempt of $max_attempts: Checking pod statuses..."
-            not_ready=$(kubectl get pods --all-namespaces --no-headers | awk '{print $4}' | grep -v "^Running$" | wc -l)
+            not_ready=$(kubectl get pods -n ci-e2e --no-headers | awk '{print $4}' | grep -v "^Running$" | wc -l)
             if [ "$not_ready" -eq 0 ]; then
               echo "All pods are running."
               ready=true
@@ -125,7 +129,7 @@ jobs:
       - name: Check if minikube is running
         run: |
           minikube status
-          kubectl get pods --all-namespaces
+          kubectl get pods -n ci-e2e
 
       - name: Run E2E Web Tests
         run: |
@@ -135,11 +139,6 @@ jobs:
           mvn -v
 
           mvn clean test-compile
-
-          find target/test-classes -name "*.class"
-          echo "ここでfindの結果を確認して、テストが実行されることを確認してください"
-
-          export GAUGE_CUSTOM_CLASSPATH=target/test-classes
 
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
           echo "Running E2E tests..."
