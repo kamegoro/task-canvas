@@ -97,7 +97,6 @@ jobs:
           kubectl create namespace ci-e2e || echo "Namespace ci-e2e already exists"
 
           nohup skaffold dev -p task-canvas-web-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
-          echo "Skaffold started in namespace ci-e2e. Waiting for pods to be ready..."
 
           max_attempts=30
           attempt=1
@@ -131,10 +130,5 @@ jobs:
         run: |
           cd task-canvas-e2e
 
-          java -version
-          mvn -v
-
           mvn clean test-compile
-
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
-          echo "Running E2E tests..."
