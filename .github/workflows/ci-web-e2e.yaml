@@ -127,8 +127,16 @@ jobs:
           kubectl get pods -n ci-e2e
 
       - name: Run E2E Web Tests
+        id: run-e2e-web-tests
         run: |
           cd task-canvas-e2e
 
           mvn clean test-compile
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
+
+      - name: Upload E2E Test Artifacts
+        if: ${{ steps.run-e2e-web-tests.outcome == 'failure' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-artifacts
+          path: task-canvas-e2e/build/reports/tests/
