@@ -131,7 +131,7 @@ jobs:
         run: |
           cd task-canvas-e2e
 
-          mvn clean test-compile
+          mvn -B -q clean test-compile
           mvn gauge:execute -DspecsDir=specs/task-canvas-web/
 
       - name: Upload E2E Test Artifacts
@@ -140,3 +140,11 @@ jobs:
         with:
           name: e2e-test-artifacts
           path: task-canvas-e2e/build/reports/tests/
+
+      - name: Show Pod Logs
+        if: failure() && steps.run-e2e-web-tests.outcome == 'failure'
+        run: |
+          cd k8s-infrastructure
+
+          kubectl logs -n ci-e2e -l app=task-canvas-web
+          kubectl logs -n ci-e2e -l app=task-canvas-api-mock
