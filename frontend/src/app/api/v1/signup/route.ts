@@ -29,6 +29,8 @@ export async function POST(req: NextRequest) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Sign up failed:', response.status, errorText);
       return NextResponse.json({ message: 'Failed to sign up' }, { status: response.status });
     }
 

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDI } from '@/context/DIContext';
+
 import { usePathname } from 'next/navigation';
+
+import { useDI } from '@/context/DIContext';
 
 type User = {
   email: string;
