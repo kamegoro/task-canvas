@@ -16,13 +16,26 @@ const TextFieldWithIcon = memo(
       | 'type'
       | 'disabled'
       | 'name'
+      | 'autoComplete'
       | 'required'
     > & {
       icon: ReactNode;
     }
   >(
     (
-      { label, placeholder, helperText, icon, value, type, onChange, disabled, name, required },
+      {
+        label,
+        placeholder,
+        helperText,
+        icon,
+        value,
+        type,
+        onChange,
+        disabled,
+        name,
+        required,
+        autoComplete,
+      },
       ref,
     ) => (
       <TextField
@@ -42,6 +55,7 @@ const TextFieldWithIcon = memo(
           input: {
             'aria-invalid': true,
             startAdornment: icon,
+            autoComplete: autoComplete,
             sx: {
               fontSize: {
                 xs: 10,
