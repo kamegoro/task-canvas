@@ -146,5 +146,7 @@ jobs:
         run: |
           cd k8s-infrastructure
 
+          kubectl get pods -n ci-e2e
+
           kubectl logs -n ci-e2e -l app=task-canvas-web
           kubectl logs -n ci-e2e -l app=task-canvas-api-mock
