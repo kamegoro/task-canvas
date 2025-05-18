@@ -13,6 +13,11 @@ export class SignUpUseCase implements SignUpUseCaseInterface {
   }
 
   async execute(credential: Credential): Promise<void> {
-    return this.credentialPort.signUp(credential);
+    try {
+      return await this.credentialPort.signUp(credential);
+    } catch (error) {
+      console.error('SignUpUseCase: エラー発生:', error);
+      throw error;
+    }
   }
 }

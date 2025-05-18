@@ -65,7 +65,7 @@ const SignUp = () => {
             <TextFieldWithIcon
               {...field}
               error={errors.email ? true : false}
-              name="mail"
+              name="email"
               label="メール"
               placeholder="メールを入力してください"
               type="email"
