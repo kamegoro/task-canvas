@@ -51,11 +51,11 @@ const TextFieldWithIcon = memo(
         required={required}
         helperText={helperText}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         slotProps={{
           input: {
             'aria-invalid': true,
             startAdornment: icon,
-            autoComplete: autoComplete,
             sx: {
               fontSize: {
                 xs: 10,

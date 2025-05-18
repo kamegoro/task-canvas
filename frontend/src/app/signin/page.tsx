@@ -40,7 +40,6 @@ const SignIn = () => {
     },
   });
   const [isLoading, setIsLoading] = useState(false);
-  console.log(errors.password);
 
   const onSubmit: SubmitHandler<InputProps> = async (values) => {
     try {
