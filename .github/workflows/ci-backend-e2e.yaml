@@ -106,16 +106,25 @@ jobs:
           ready=false
           while [ $attempt -le $max_attempts ]; do
             echo "Attempt $attempt of $max_attempts: Checking pod statuses in ci-e2e namespace..."
-            pods=$(kubectl get pods -n ci-e2e --no-headers | grep -v "db-connection-test")
-            echo "$pods"
+            all_pods=$(kubectl get pods -n ci-e2e --no-headers)
+            echo "All pods:"
+            echo "$all_pods"
 
-            if [ -n "$pods" ]; then
-              not_ready=$(echo "$pods" | awk '{print $3}' | grep -vE "^(Running|Completed)$" | wc -l)
-              if [ "$not_ready" -eq 0 ]; then
-                echo "All pods are running."
-                ready=true
-                break
-              fi
+            filtered_pods=$(echo "$all_pods" | grep -v "db-connection-test")
+            echo "Filtered pods (excluding db-connection-test):"
+            echo "$filtered_pods"
+
+            if [ -z "$filtered_pods" ]; then
+              echo "No pods to evaluate after excluding db-connection-test. Assuming ready."
+              ready=true
+              break
+            fi
+
+            not_ready=$(echo "$filtered_pods" | awk '{print $3}' | grep -vE "^(Running|Completed)$" | wc -l)
+            if [ "$not_ready" -eq 0 ]; then
+              echo "All non-db-connection-test pods are Running or Completed."
+              ready=true
+              break
             fi
             echo "Not all pods are ready, waiting..."
             sleep 5
