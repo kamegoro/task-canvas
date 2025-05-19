@@ -1,12 +1,14 @@
-FROM node:24-alpine
-
+FROM node:24-alpine AS builder
 WORKDIR /task-canvas/frontend
-
-COPY package.json .
-COPY package-lock.json .
-
+COPY package.json package-lock.json ./
 RUN npm install
-
 COPY . .
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+FROM node:24-alpine
+WORKDIR /task-canvas/frontend
+COPY --from=builder /task-canvas/frontend/.next ./.next
+COPY --from=builder /task-canvas/frontend/public ./public
+COPY package.json package-lock.json ./
+RUN npm install --production
+CMD ["npm", "run", "start"]
