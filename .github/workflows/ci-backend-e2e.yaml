@@ -106,11 +106,11 @@ jobs:
           ready=false
           while [ $attempt -le $max_attempts ]; do
             echo "Attempt $attempt of $max_attempts: Checking pod statuses in ci-e2e namespace..."
-            pods=$(kubectl get pods -n ci-e2e --no-headers)
+            pods=$(kubectl get pods -n ci-e2e --no-headers | grep -v "db-connection-test")
             echo "$pods"
 
             if [ -n "$pods" ]; then
-              not_ready=$(echo "$pods" | awk '{print $3}' | grep -v "^Running$" | wc -l)
+              not_ready=$(echo "$pods" | awk '{print $3}' | grep -vE "^(Running|Completed)$" | wc -l)
               if [ "$not_ready" -eq 0 ]; then
                 echo "All pods are running."
                 ready=true
