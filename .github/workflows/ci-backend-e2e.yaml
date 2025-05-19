@@ -82,6 +82,11 @@ jobs:
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
 
+      - name: Skaffold Build
+        run: |
+          cd k8s-infrastructure
+          skaffold build -p task-canvas-api-e2e --namespace ci-e2e
+
       - name: Deploy and check pods in CI namespace
         run: |
           cd k8s-infrastructure
