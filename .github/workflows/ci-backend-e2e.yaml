@@ -106,7 +106,16 @@ jobs:
           ready=false
           while [ $attempt -le $max_attempts ]; do
             echo "Attempt $attempt of $max_attempts: Checking pod statuses in ci-e2e namespace..."
+
             all_pods=$(kubectl get pods -n ci-e2e --no-headers)
+
+            if [ -z "$all_pods" ]; then
+              echo "No pods found in ci-e2e namespace, waiting..."
+              sleep 5
+              attempt=$((attempt+1))
+              continue
+            fi
+
             echo "All pods:"
             echo "$all_pods"
 
@@ -115,7 +124,7 @@ jobs:
             echo "$filtered_pods"
 
             if [ -z "$filtered_pods" ]; then
-              echo "No pods to evaluate after excluding db-connection-test. Assuming ready."
+              echo "Only db-connection-test pods found. Assuming these are not critical. Proceeding."
               ready=true
               break
             fi
@@ -126,6 +135,7 @@ jobs:
               ready=true
               break
             fi
+
             echo "Not all pods are ready, waiting..."
             sleep 5
             attempt=$((attempt+1))
