@@ -35,6 +35,12 @@ jobs:
           repository: kamegoro/k8s-infrastructure
           path: k8s-infrastructure
 
+      - name: Checkout task-canvas-progress
+        uses: actions/checkout@v4
+        with:
+          repository: kamegoro/task-canvas-progress
+          path: task-canvas-progress
+
       - name: Checkout task-canvas-e2e
         uses: actions/checkout@v4
         with:
