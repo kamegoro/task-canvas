@@ -39,8 +39,10 @@ const SignUp = () => {
     try {
       setIsLoading(true);
       await signUp(values.email, values.password);
-      router.push('/signin');
+      setIsLoading(false);
       showSuccess('アカウント作成に成功しました');
+
+      router.push('/signin');
     } catch (e) {
       showError('アカウント作成に失敗しました');
       console.error(e);
@@ -63,7 +65,7 @@ const SignUp = () => {
             <TextFieldWithIcon
               {...field}
               error={errors.email ? true : false}
-              name="mail"
+              name="email"
               label="メール"
               placeholder="メールを入力してください"
               type="email"

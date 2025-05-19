@@ -29,18 +29,13 @@ const SignIn = () => {
   const router = useRouter();
   const { execute: signIn } = useSignIn();
   const { showError, showSuccess } = useSnackbar();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<InputProps>({
+  const { control, handleSubmit } = useForm<InputProps>({
     defaultValues: {
       email: '',
       password: '',
     },
   });
   const [isLoading, setIsLoading] = useState(false);
-  console.log(errors.password);
 
   const onSubmit: SubmitHandler<InputProps> = async (values) => {
     try {

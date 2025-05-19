@@ -6,10 +6,20 @@ export class CredentialGateway implements CredentialPort {
   constructor(private apiRoutesDriver: ApiRoutesDriver) {}
 
   async signIn(credential: Credential): Promise<void> {
-    await this.apiRoutesDriver.signIn(credential.getEmail(), credential.getPassword());
+    try {
+      await this.apiRoutesDriver.signIn(credential.getEmail(), credential.getPassword());
+    } catch (error) {
+      console.error('CredentialGateway signIn エラー:', error);
+      throw error;
+    }
   }
 
-  signUp(credential: Credential): Promise<void> {
-    return this.apiRoutesDriver.signUp(credential.getEmail(), credential.getPassword());
+  async signUp(credential: Credential): Promise<void> {
+    try {
+      return await this.apiRoutesDriver.signUp(credential.getEmail(), credential.getPassword());
+    } catch (error) {
+      console.error('CredentialGateway signUp エラー:', error);
+      throw error;
+    }
   }
 }

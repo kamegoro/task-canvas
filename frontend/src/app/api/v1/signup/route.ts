@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
 
   const { email, password } = body;
 
+  console.debug('Received signUp payload:', { email, password });
+
   try {
     const response = await fetch(`${BASE_URL}/v1/signUp`, {
       method: 'POST',
@@ -29,6 +31,8 @@ export async function POST(req: NextRequest) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Sign up failed:', response.status, errorText);
       return NextResponse.json({ message: 'Failed to sign up' }, { status: response.status });
     }
 

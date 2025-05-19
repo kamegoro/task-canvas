@@ -101,34 +101,32 @@ export class ApiRoutesDriver implements ApiRouteDriverInterface {
   async signIn(email: string, password: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/api/v1/signin`, {
       method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+      body: JSON.stringify({ email, password }),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     if (response.status !== 200) {
-      throw new Error('Failed to sign in');
+      const errorText = await response.text();
+      console.error('signIn エラー:', response.status, errorText);
+      throw new Error(`Failed to sign in: ${response.status} ${errorText}`);
     }
   }
 
   async signUp(email: string, password: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/api/v1/signup`, {
       method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+      body: JSON.stringify({ email, password }),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     if (response.status !== 200) {
-      throw new Error('Failed to sign up');
+      const errorText = await response.text();
+      console.error('signUp エラー:', response.status, errorText);
+      throw new Error(`Failed to sign up: ${response.status} ${errorText}`);
     }
   }
 
