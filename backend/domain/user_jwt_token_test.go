@@ -45,16 +45,12 @@ func TestNewUserJwtToken(t *testing.T) {
 }
 
 func TestUserJwtToken_ValidateJWT(t *testing.T) {
-	os.Setenv("JWT_SECRET", "test_secret")
 	defer os.Unsetenv("JWT_SECRET")
+	defer func() { _ = os.Unsetenv("JWT_SECRET") }()
 
 	validUserId := NewUserId()
-	// expiredUserId := NewUserId()
 
-	// 有効なトークンを生成
 	validToken, _ := NewUserJwtToken(&validUserId)
-
-	// expiredToken, _ := NewUserJwtToken(&expiredUserId)
 
 	time.Sleep(1 * time.Second)
 
@@ -70,12 +66,6 @@ func TestUserJwtToken_ValidateJWT(t *testing.T) {
 			want:    &validUserId,
 			wantErr: false,
 		},
-		// {
-		// 	name:    "期限切れのトークンの場合、エラーを返す",
-		// 	tr:      expiredToken,
-		// 	want:    nil,
-		// 	wantErr: true,
-		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
