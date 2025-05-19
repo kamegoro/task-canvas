@@ -3,7 +3,7 @@ import { ApiRoutesDriver } from '@/driver';
 import { CredentialPort } from '@/port/credentialPort';
 
 export class CredentialGateway implements CredentialPort {
-  constructor(private apiRoutesDriver: ApiRoutesDriver) { }
+  constructor(private apiRoutesDriver: ApiRoutesDriver) {}
 
   async signIn(credential: Credential): Promise<void> {
     try {
