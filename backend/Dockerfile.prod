@@ -1,0 +1,20 @@
+FROM golang:1.24.3-alpine3.21 AS builder
+
+WORKDIR /build
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY ./ .
+ARG CGO_ENABLED=0
+ARG GOOS=linux
+ARG GOARCH=amd64
+
+RUN go build -o target/task-canvas-api
+
+FROM alpine:latest
+
+WORKDIR /app
+COPY --from=builder /build/target/task-canvas-api .
+
+ENTRYPOINT ["/bin/sh", "-c", "/app/task-canvas-api & tail -f /dev/null"]
