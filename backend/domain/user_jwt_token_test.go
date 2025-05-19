@@ -45,7 +45,7 @@ func TestNewUserJwtToken(t *testing.T) {
 }
 
 func TestUserJwtToken_ValidateJWT(t *testing.T) {
-	defer os.Unsetenv("JWT_SECRET")
+	_ = os.Setenv("JWT_SECRET", "test_secret")
 	defer func() { _ = os.Unsetenv("JWT_SECRET") }()
 
 	validUserId := NewUserId()
