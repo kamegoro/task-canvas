@@ -1,0 +1,144 @@
+name: "CI Backend E2E"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - ".github/workflows/ci-backend-e2e.yaml"
+      - "backend/**"
+
+permissions:
+  contents: "read"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-backend-e2e:
+    name: backend-e2e
+
+    timeout-minutes: 15
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout task-canvas
+        uses: actions/checkout@v4
+        with:
+          path: task-canvas
+
+      - name: Checkout k8s-infrastructure
+        uses: actions/checkout@v4
+        with:
+          repository: kamegoro/k8s-infrastructure
+          path: k8s-infrastructure
+
+      - name: Checkout task-canvas-e2e
+        uses: actions/checkout@v4
+        with:
+          repository: kamegoro/task-canvas-e2e
+          path: task-canvas-e2e
+
+      - name: Install asdf
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | jq -r .tag_name)"
+
+          source $HOME/.asdf/asdf.sh
+          asdf version
+
+          echo "$HOME/.asdf/shims" >> $GITHUB_PATH
+          echo "$HOME/.asdf/bin" >> $GITHUB_PATH
+
+      - name: Install k8s-infrastructure tools
+        run: |
+          cd k8s-infrastructure
+
+          for tool in $(cut -d ' ' -f 1 .tool-versions | sort -u); do
+            echo "Adding plugin for: $tool"
+            asdf plugin-add "$tool" || true
+          done
+
+          asdf install
+          asdf list
+
+      - name: Install task-canvas-e2e tools
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          cd task-canvas-e2e
+
+          sdk env install
+
+          asdf plugin add gauge https://github.com/yysushi/asdf-gauge.git
+          asdf install
+          asdf list
+
+          echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> $GITHUB_ENV
+          echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
+
+      - name: Start minikube
+        uses: medyagh/setup-minikube@latest
+
+      - name: Deploy and check pods in CI namespace
+        run: |
+          cd k8s-infrastructure
+
+          kubectl create namespace ci-e2e || echo "Namespace ci-e2e already exists"
+
+          nohup skaffold dev -p task-canvas-api-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
+
+          max_attempts=30
+          attempt=1
+          ready=false
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts: Checking pod statuses in ci-e2e namespace..."
+            pods=$(kubectl get pods -n ci-e2e --no-headers)
+            echo "$pods"
+
+            if [ -n "$pods" ]; then
+              not_ready=$(echo "$pods" | awk '{print $3}' | grep -v "^Running$" | wc -l)
+              if [ "$not_ready" -eq 0 ]; then
+                echo "All pods are running."
+                ready=true
+                break
+              fi
+            fi
+            echo "Not all pods are ready, waiting..."
+            sleep 5
+            attempt=$((attempt+1))
+          done
+
+          if [ "$ready" != "true" ]; then
+            echo "Pods did not become ready in time, exiting."
+            exit 1
+          fi
+
+          kubectl get pods -n ci-e2e
+
+      - name: Run E2E API Tests
+        id: run-e2e-api-tests
+        run: |
+          cd task-canvas-e2e
+
+          mvn -B -q clean test-compile
+          mvn gauge:execute -DspecsDir=specs/task-canvas/
+
+      - name: Upload E2E Test Artifacts
+        if: failure() && steps.run-e2e-api-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-artifacts
+          path: task-canvas-e2e/build/reports/tests/
+
+      - name: Show Pod Logs
+        if: failure() && steps.run-e2e-api-tests.outcome == 'failure'
+        run: |
+          cd k8s-infrastructure
+
+          kubectl get pods -n ci-e2e
+
+          kubectl logs -n ci-e2e -l app=task-canvas-api
+          kubectl logs -n ci-e2e -l app=task-canvas-db
