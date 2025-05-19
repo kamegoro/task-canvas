@@ -90,7 +90,7 @@ jobs:
 
           nohup skaffold dev -p task-canvas-api-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
 
-          max_attempts=30
+          max_attempts=60
           attempt=1
           ready=false
           while [ $attempt -le $max_attempts ]; do
