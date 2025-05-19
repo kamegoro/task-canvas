@@ -115,7 +115,7 @@ export class ApiRoutesDriver implements ApiRouteDriverInterface {
   }
 
   async signUp(email: string, password: string): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/v1/signUp`, {
+    const response = await fetch(`${this.baseUrl}/api/v1/signup`, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       headers: {
