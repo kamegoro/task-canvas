@@ -90,6 +90,11 @@ jobs:
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
 
+      - name: Skaffold Build
+        run: |
+          cd k8s-infrastructure
+          skaffold build -p task-canvas-web-e2e --namespace ci-e2e
+
       - name: Deploy and check pods in CI namespace
         run: |
           cd k8s-infrastructure
@@ -98,7 +103,7 @@ jobs:
 
           nohup skaffold dev -p task-canvas-web-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
 
-          max_attempts=60
+          max_attempts=30
           attempt=1
           ready=false
           while [ $attempt -le $max_attempts ]; do
