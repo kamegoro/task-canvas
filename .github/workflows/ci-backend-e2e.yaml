@@ -35,12 +35,6 @@ jobs:
           repository: kamegoro/k8s-infrastructure
           path: k8s-infrastructure
 
-      - name: Checkout task-canvas-progress
-        uses: actions/checkout@v4
-        with:
-          repository: kamegoro/task-canvas-progress
-          path: task-canvas-progress
-
       - name: Checkout task-canvas-e2e
         uses: actions/checkout@v4
         with:
@@ -101,7 +95,7 @@ jobs:
 
           nohup skaffold dev -p task-canvas-api-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
 
-          max_attempts=30
+          max_attempts=20
           attempt=1
           ready=false
           while [ $attempt -le $max_attempts ]; do
