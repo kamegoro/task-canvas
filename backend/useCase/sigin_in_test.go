@@ -2,7 +2,6 @@ package useCase
 
 import (
 	"context"
-	"os"
 	"reflect"
 	"task-canvas/domain"
 	mock_port "task-canvas/mock/port"
@@ -13,8 +12,7 @@ import (
 )
 
 func TestSignInUseCase_Exec(t *testing.T) {
-	os.Setenv("JWT_SECRET", "test-secret")
-	defer os.Unsetenv("JWT_SECRET")
+	t.Setenv("JWT_SECRET", "test-secret")
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
