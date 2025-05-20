@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"os"
 	"testing"
 	"time"
 
@@ -45,8 +44,7 @@ func TestNewUserJwtToken(t *testing.T) {
 }
 
 func TestUserJwtToken_ValidateJWT(t *testing.T) {
-	_ = os.Setenv("JWT_SECRET", "test_secret")
-	defer func() { _ = os.Unsetenv("JWT_SECRET") }()
+	t.Setenv("JWT_SECRET", "test_secret")
 
 	validUserId := NewUserId()
 
