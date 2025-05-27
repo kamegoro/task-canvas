@@ -12,6 +12,8 @@ import TodoCard from '@/_components/molecules/TodoCard';
 import Box from '@/_components/mui/Box';
 import Calender from '@/_components/mui/Calendar';
 import Container from '@/_components/mui/Container';
+import List from '@/_components/mui/List';
+import ListItem from '@/_components/mui/ListItem';
 import Stack from '@/_components/mui/Stack';
 import TaskProgress from '@/_components/organisms/TaskProgress';
 import { useSignOut } from '@/hooks/useSignOut';
@@ -169,20 +171,29 @@ const Top = () => {
               currentCount={progress.completedCount}
             />
           </Box>
-          <Box sx={{ marginTop: 3 }}>
-            {todos.map((todo, i) => {
+          <List
+            sx={{ marginTop: 3 }}
+            role="list"
+            aria-label="todo-list"
+          >
+            {todos.map((todo) => {
               return (
-                <TodoCard
-                  text={todo.content}
-                  checked={todo.completed}
-                  onChange={(event) => {
-                    handleChangeCheckbox(todo.id, todo.content, event);
-                  }}
-                  key={i}
-                />
+                <ListItem
+                  role="listitem"
+                  aria-label="todo-item"
+                  key={todo.id}
+                >
+                  <TodoCard
+                    text={todo.content}
+                    checked={todo.completed}
+                    onChange={(event) => {
+                      handleChangeCheckbox(todo.id, todo.content, event);
+                    }}
+                  />
+                </ListItem>
               );
             })}
-          </Box>
+          </List>
         </Box>
       </Container>
     </Box>
