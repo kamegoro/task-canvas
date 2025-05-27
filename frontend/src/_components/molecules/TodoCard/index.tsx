@@ -35,6 +35,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
           bgcolor: 'White',
         },
       }}
+      aria-label="todo-card"
     >
       <Checkbox
         checked={checked}
@@ -63,6 +64,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
         </Typography>
         {isHover && (
           <IconButton
+            aria-label="todo-edit"
             sx={{
               marginRight: '12px',
             }}
