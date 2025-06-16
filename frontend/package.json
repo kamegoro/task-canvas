@@ -16,13 +16,13 @@
     "@auth0/auth0-react": "2.3.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
-    "@lit/react": "^1.0.7",
+    "@lit/react": "1.0.7",
     "@mui/icons-material": "7.1.1",
     "@mui/material": "7.1.1",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-hook-form": "7.57.0"
+    "react-hook-form": "7.58.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.6",
@@ -36,9 +36,9 @@
     "@types/node": "22.15.29",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
-    "@typescript-eslint/eslint-plugin": "8.33.1",
-    "@typescript-eslint/parser": "8.33.1",
-    "eslint": "9.28.0",
+    "@typescript-eslint/eslint-plugin": "8.34.0",
+    "@typescript-eslint/parser": "8.34.0",
+    "eslint": "9.29.0",
     "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-import": "2.31.0",
@@ -50,7 +50,7 @@
     "prettier": "3.5.3",
     "storybook": "8.6.14",
     "typescript": "5.8.3",
-    "vitest": "3.2.2"
+    "vitest": "3.2.3"
   },
   "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
 }
