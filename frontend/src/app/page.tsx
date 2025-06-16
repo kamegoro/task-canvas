@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import Button from '@/_components/atoms/Button';
@@ -16,7 +14,6 @@ import List from '@/_components/mui/List';
 import ListItem from '@/_components/mui/ListItem';
 import Stack from '@/_components/mui/Stack';
 import TaskProgress from '@/_components/organisms/TaskProgress';
-import { useSignOut } from '@/hooks/useSignOut';
 import { useTodo } from '@/hooks/useTodo';
 
 type TodoFormProps = {
@@ -24,8 +21,6 @@ type TodoFormProps = {
 };
 
 const Top = () => {
-  const router = useRouter();
-  const { execute } = useSignOut();
   const { todos, progress, addTodo, updateTodo } = useTodo();
   const { showError } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<TodoFormProps>({
@@ -61,23 +56,6 @@ const Top = () => {
         paddingTop: '60px',
       }}
     >
-      <Button
-        onClick={() => {
-          execute();
-          router.push('/signin');
-        }}
-        sx={{
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: 'primary.dark',
-          },
-        }}
-      >
-        ログアウト
-      </Button>
       <Container maxWidth={'lg'}>
         <Box
           sx={{
