@@ -22,7 +22,17 @@ export default function RootLayout({
             <UserProvider>
               <SnackbarProvider>
                 <AppHeader>
-                  <Box suppressContentEditableWarning>{children}</Box>
+                  <Box
+                    sx={{
+                      width: '100vw',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    suppressContentEditableWarning
+                  >
+                    {children}
+                  </Box>
                 </AppHeader>
               </SnackbarProvider>
             </UserProvider>
