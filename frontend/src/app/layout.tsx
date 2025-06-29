@@ -21,19 +21,18 @@ export default function RootLayout({
           <DiProvider>
             <UserProvider>
               <SnackbarProvider>
-                <AppHeader>
-                  <Box
-                    sx={{
-                      width: '100vw',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    suppressContentEditableWarning
-                  >
-                    {children}
-                  </Box>
-                </AppHeader>
+                <AppHeader />
+                <Box
+                  sx={{
+                    width: '100vw',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  suppressContentEditableWarning
+                >
+                  {children}
+                </Box>
               </SnackbarProvider>
             </UserProvider>
           </DiProvider>

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -8,17 +10,18 @@ import Box from '@/_components/mui/Box';
 import IconButton from '@/_components/mui/IconButton';
 import Menu from '@/_components/mui/Menu';
 import MenuItem from '@/_components/mui/MenuItem';
+import AppBar from '@/_components/mui/AppBar';
 import { useSignOut } from '@/hooks/useSignOut';
 import { useUser } from '@/hooks/useUser';
 
-const AppHeader: React.FC<React.PropsWithChildren> = ({ children }) => {
+const AppHeader: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
   const { user } = useUser();
   const { execute } = useSignOut();
 
-  if (!user) return null;
+  if (!user.email) return null;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,7 +32,8 @@ const AppHeader: React.FC<React.PropsWithChildren> = ({ children }) => {
   };
 
   return (
-    <Box
+    <AppBar
+      position="static"
       sx={{
         width: '100%',
         backgroundColor: '#fafafa',
@@ -71,8 +75,7 @@ const AppHeader: React.FC<React.PropsWithChildren> = ({ children }) => {
           </MenuItem>
         </Menu>
       </Box>
-      {children}
-    </Box>
+    </AppBar>
   );
 };
 
