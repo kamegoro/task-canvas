@@ -27,7 +27,10 @@ export const useUser = (): UseUserInterface => {
   }, [getUserUseCase]);
 
   useEffect(() => {
-    if (pathname === '/signin' || pathname === '/signup') return;
+    if (pathname === '/signin' || pathname === '/signup') {
+      setUser({ email: '' });
+      return;
+    }
     (async () => {
       await getUser();
     })();

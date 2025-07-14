@@ -4,6 +4,7 @@ services:
   task_canvas_web:
     build:
       context: ./frontend
+      dockerfile: dev.Dockerfile
     ports:
       - "${NEXT_PORT}:3000"
     depends_on:
@@ -11,9 +12,8 @@ services:
     env_file:
       - .env
     volumes:
-      - type: bind
-        source: ./frontend
-        target: /task-canvas/frontend
+      - ./frontend:/frontend
+      - /frontend/node_modules
     networks:
       - task_canvas_network
 
