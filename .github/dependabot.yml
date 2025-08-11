@@ -12,8 +12,10 @@ updates:
           - "storybook"
           - "eslint-plugin-storybook"
           - "@chromatic-com/storybook"
-      react-types:
+      react:
         patterns:
+          - "react"
+          - "react-dom"
           - "@types/react"
           - "@types/react-dom"
 
