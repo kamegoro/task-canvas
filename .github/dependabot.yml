@@ -12,6 +12,12 @@ updates:
           - "storybook"
           - "eslint-plugin-storybook"
           - "@chromatic-com/storybook"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
 
   - package-ecosystem: "gomod"
     directory: "backend/"
