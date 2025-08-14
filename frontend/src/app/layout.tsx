@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from '@/_components/contexts/SnackbarContext';
 import { UserProvider } from '@/_components/contexts/UserContext';
 import Box from '@/_components/mui/Box';
+import AppHeader from '@/_components/organisms/AppHeader';
 import DiProvider from '@/context/DIContext';
 import theme from '@/styles/theme';
 
@@ -20,7 +21,18 @@ export default function RootLayout({
           <DiProvider>
             <UserProvider>
               <SnackbarProvider>
-                <Box suppressContentEditableWarning>{children}</Box>
+                <AppHeader />
+                <Box
+                  sx={{
+                    width: '100vw',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  suppressContentEditableWarning
+                >
+                  {children}
+                </Box>
               </SnackbarProvider>
             </UserProvider>
           </DiProvider>
