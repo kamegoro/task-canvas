@@ -56,7 +56,10 @@ const AppHeader: React.FC = () => {
           onClick={handleClick}
           sx={{ marginRight: 1 }}
         >
-          <MenuIcon sx={{ color: 'black', height: 32, width: 32 }} />
+          <MenuIcon
+            aria-label="hamburger-menu"
+            sx={{ color: 'black', height: 32, width: 32 }}
+          />
         </IconButton>
         <Menu
           id="header-menu"
