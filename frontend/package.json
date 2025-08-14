@@ -27,7 +27,7 @@
     "@chromatic-com/storybook": "4.1.0",
     "@storybook/addon-links": "9.1.2",
     "@storybook/nextjs": "9.1.2",
-    "@testing-library/jest-dom": "6.6.4",
+    "@testing-library/jest-dom": "6.7.0",
     "@testing-library/react": "16.3.0",
     "@types/node": "24.2.1",
     "@types/react": "19.1.10",
