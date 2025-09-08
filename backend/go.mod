@@ -3,7 +3,7 @@ module task-canvas
 go 1.24.3
 
 require (
-	github.com/jackc/pgx/v5 v5.7.5
+	github.com/jackc/pgx/v5 v5.7.6
 	github.com/labstack/echo/v4 v4.13.4
 )
 
