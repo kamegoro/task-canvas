@@ -4,7 +4,7 @@ go 1.24.3
 
 require (
 	github.com/jackc/pgx/v5 v5.8.0
-	github.com/labstack/echo/v4 v4.15.0
+	github.com/labstack/echo/v4 v4.15.1
 )
 
 require (
