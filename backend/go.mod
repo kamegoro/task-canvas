@@ -1,9 +1,9 @@
 module task-canvas
 
-go 1.24.3
+go 1.25.0
 
 require (
-	github.com/jackc/pgx/v5 v5.8.0
+	github.com/jackc/pgx/v5 v5.9.2
 	github.com/labstack/echo/v4 v4.15.1
 )
 
