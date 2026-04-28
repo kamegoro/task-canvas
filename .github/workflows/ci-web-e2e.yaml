@@ -47,16 +47,8 @@ jobs:
           repository: kamegoro/task-canvas-e2e
           path: task-canvas-e2e
 
-      - name: Install asdf
-        run: |
-          sudo apt-get update && sudo apt-get install -y jq
-          git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest | jq -r .tag_name)"
-
-          source $HOME/.asdf/asdf.sh
-          asdf version
-
-          echo "$HOME/.asdf/shims" >> $GITHUB_PATH
-          echo "$HOME/.asdf/bin" >> $GITHUB_PATH
+      - name: Set up asdf
+        uses: asdf-vm/actions/setup@v3
 
       - name: Install k8s-infrastructure tools
         run: |
