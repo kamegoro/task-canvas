@@ -47,21 +47,15 @@ jobs:
           repository: kamegoro/task-canvas-e2e
           path: task-canvas-e2e
 
-      - name: Set up asdf
-        uses: asdf-vm/actions/setup@v3
+      - name: Set up mise
+        uses: jdx/mise-action@v2
 
       - name: Install k8s-infrastructure tools
         run: |
           cd k8s-infrastructure
-
-          for tool in $(cut -d ' ' -f 1 .tool-versions | sort -u); do
-            echo "Adding plugin for: $tool"
-            asdf plugin-add "$tool" || true
-          done
-
-          asdf install
+          mise install
           echo "Installed tools:"
-          asdf list
+          mise ls
 
       - name: Install task-canvas-e2e tools
         run: |
@@ -71,10 +65,10 @@ jobs:
 
           sdk env install
 
-          asdf plugin add gauge https://github.com/yysushi/asdf-gauge.git
-          asdf install
+          mise plugins add gauge https://github.com/yysushi/asdf-gauge.git
+          mise install
           echo "Installed tools:"
-          asdf list
+          mise ls
 
           echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> $GITHUB_ENV
           echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
