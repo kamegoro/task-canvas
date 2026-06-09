@@ -3,9 +3,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import LockIcon from '@mui/icons-material/Lock';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import { ArrowBack as ArrowBackIcon, Lock as LockIcon, MailOutline as MailOutlineIcon } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
