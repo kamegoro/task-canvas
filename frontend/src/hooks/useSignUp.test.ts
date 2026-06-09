@@ -48,7 +48,6 @@ vi.mock('@/context/DIContext', () => ({
   }),
 }));
 
-// eslint-disable-next-line import/order
 import { Credential, Email, Password } from '@/domain/credential';
 
 beforeEach(() => {
