@@ -28,6 +28,7 @@ export const useUser = (): UseUserInterface => {
 
   useEffect(() => {
     if (pathname === '/signin' || pathname === '/signup') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser({ email: '' });
       return;
     }

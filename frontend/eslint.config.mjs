@@ -1,85 +1,66 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import prettierConfig from 'eslint-config-prettier';
+import nextConfig from 'eslint-config-next';
+import prettierPlugin from 'eslint-plugin-prettier';
+import unusedImports from 'eslint-plugin-unused-imports';
+import importPlugin from 'eslint-plugin-import';
 
 export default [
   {
     ignores: [
-      ".next/**",
-      "node_modules/**",
-      "storybook-static/**",
-      ".storybook/**",
-      "next-env.d.ts",
-      "eslint.config.mjs",
-      "next.config.js",
+      'storybook-static/**',
+      '.storybook/**',
+      'eslint.config.mjs',
+      'next.config.js',
     ],
   },
-  ...compat.config({
-    extends: [
-      "next",
-      "next/core-web-vitals",
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "prettier",
-    ],
-    plugins: ["@typescript-eslint", "react", "prettier", "unused-imports", "import"],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      ecmaVersion: 2021,
-      sourceType: "module",
-      ecmaFeatures: {
-        jsx: true,
-      },
-      project: "./tsconfig.json",
+  ...nextConfig,
+  // nextConfig already registers @typescript-eslint plugin; only add the rules
+  ...tsPlugin.configs['flat/recommended'].filter((c) => !c.plugins),
+  {
+    plugins: {
+      prettier: prettierPlugin,
+      'unused-imports': unusedImports,
+      import: importPlugin,
     },
     rules: {
-      "prettier/prettier": "error",
-      "unused-imports/no-unused-imports": "error",
-      "import/order": [
-        "error",
+      ...prettierConfig.rules,
+      'prettier/prettier': 'error',
+      'unused-imports/no-unused-imports': 'error',
+      'import/order': [
+        'error',
         {
-          groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object"],
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object'],
           pathGroups: [
             {
-              pattern: "{react,react/**,react-dom/**}",
-              group: "builtin",
-              position: "before",
+              pattern: '{react,react/**,react-dom/**}',
+              group: 'builtin',
+              position: 'before',
             },
             {
-              pattern: "{next,next/**}",
-              group: "builtin",
-              position: "before",
+              pattern: '{next,next/**}',
+              group: 'builtin',
+              position: 'before',
             },
             {
-              pattern: "{@mui/**,@emotion/**}",
-              group: "external",
-              position: "before",
+              pattern: '{@mui/**,@emotion/**}',
+              group: 'external',
+              position: 'before',
             },
             {
-              pattern: "{@/**}",
-              group: "parent",
-              position: "before",
+              pattern: '{@/**}',
+              group: 'parent',
+              position: 'before',
             },
           ],
-          pathGroupsExcludedImportTypes: ["builtin"],
-          "newlines-between": "always-and-inside-groups",
+          pathGroupsExcludedImportTypes: ['builtin'],
+          'newlines-between': 'always-and-inside-groups',
           alphabetize: {
-            order: "asc",
+            order: 'asc',
             caseInsensitive: true,
           },
         },
       ],
     },
-  }),
+  },
 ];
