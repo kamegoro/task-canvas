@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import MenuIcon from '@mui/icons-material/Menu';
+import { Menu as MenuIcon } from '@mui/icons-material';
 
 import AppBar from '@/_components/mui/AppBar';
 import Box from '@/_components/mui/Box';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
 
 import Box from '@/_components/mui/Box';
 import Link, { LinkProps } from '@/_components/mui/Link';

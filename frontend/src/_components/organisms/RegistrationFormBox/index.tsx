@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import InfoIcon from '@mui/icons-material/Info';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import Box from '@/_components/mui/Box';
 import Typography from '@/_components/mui/Typography';
