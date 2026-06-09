@@ -25,6 +25,19 @@ const config: StorybookConfig = {
         '@': path.resolve(__dirname, '../src'),
       };
     }
+
+    // Next.js 16では next/dist/build/swc から isWasm が削除されたため
+    // @storybook/nextjs の next-swc-loader-patch.js が失敗するのを回避する
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const swcModule = require('next/dist/build/swc') as Record<string, unknown>;
+      if (typeof swcModule.isWasm !== 'function') {
+        swcModule.isWasm = () => Promise.resolve(false);
+      }
+    } catch {
+      // swc モジュールが存在しない環境では無視する
+    }
+
     return config;
   },
 
