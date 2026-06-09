@@ -5,8 +5,12 @@ import { useSignUp } from '@/hooks/useSignUp';
 const mockSignUpExecute = vi.fn();
 
 vi.mock('@/domain/credential', () => {
-  const FakeEmail = vi.fn().mockImplementation((value: string) => ({ value }));
-  const FakePassword = vi.fn().mockImplementation((value: string) => ({ value }));
+  const FakeEmail = vi.fn().mockImplementation(function (value: string) {
+    return { value };
+  });
+  const FakePassword = vi.fn().mockImplementation(function (value: string) {
+    return { value };
+  });
 
   class FakeCredential {
     constructor(
