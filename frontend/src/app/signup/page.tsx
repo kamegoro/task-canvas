@@ -41,7 +41,6 @@ const SignUp = () => {
     try {
       setIsLoading(true);
       await signUp(values.email, values.password);
-      setIsLoading(false);
       showSuccess('アカウント作成に成功しました');
 
       router.push('/signin');

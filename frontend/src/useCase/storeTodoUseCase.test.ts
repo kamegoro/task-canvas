@@ -1,16 +1,26 @@
+import { RegisterTodo, TodoCompleted, TodoContent } from '@/domain/todo';
+import { StoreTodoUseCase } from '@/useCase/storeTodoUseCase';
+
 describe('storeTodoUseCase', () => {
   it('Todoを保存する', async () => {
-    class MockRegisterTodo {
-      getContent = vi.fn();
-      getCompleted = vi.fn();
+    class MockRegisterTodoPort {
       register = vi.fn().mockResolvedValueOnce(undefined);
     }
+    const mockRegisterTodoPort = new MockRegisterTodoPort();
 
-    const mockRegisterTodo = new MockRegisterTodo();
+    const registerTodo = RegisterTodo.factory(
+      new TodoContent('Content 1'),
+      new TodoCompleted(false),
+    );
 
-    const sut = await mockRegisterTodo.register();
+    const sut = await new StoreTodoUseCase(mockRegisterTodoPort).execute(registerTodo);
+    const expected = undefined;
 
-    expect(sut).toEqual(undefined);
-    expect(mockRegisterTodo.register).toHaveBeenCalledTimes(1);
+    expect(sut).toEqual(expected);
+    expect(mockRegisterTodoPort.register).toHaveBeenCalledTimes(1);
+    expect(mockRegisterTodoPort.register).toHaveBeenCalledWith(
+      registerTodo.getContent(),
+      registerTodo.getCompleted(),
+    );
   });
 });

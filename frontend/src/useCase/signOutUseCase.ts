@@ -1,8 +1,7 @@
-import { User } from '@/domain/user';
 import { SignOutPort } from '@/port/signOutPort';
 
 interface SignOutUseCaseInterface {
-  execute: (user: User) => void;
+  execute: () => void;
 }
 
 export class SignOutUseCase implements SignOutUseCaseInterface {

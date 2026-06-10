@@ -36,7 +36,7 @@ export const useDI = (): DIContainer => {
 
 const DiProvider = ({ children }: { children: React.ReactNode }) => {
   const diContainer = useMemo<DIContainer>(() => {
-    const apiRouteDriver = new ApiRoutesDriver('http://localhost:3000');
+    const apiRouteDriver = new ApiRoutesDriver('');
 
     const credentialGateway = new CredentialGateway(apiRouteDriver);
     const todoGateway = new TodoGateway(apiRouteDriver);
