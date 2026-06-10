@@ -31,13 +31,13 @@ func GetUsersMe(c echo.Context) error {
 
 	uuidUserId, err := uuid.Parse(userIdStr)
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to parse userId: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	user, err := getUsersMeUseCase.Exec(c.Request().Context(), domain.UserId(uuidUserId))
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to get user: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
