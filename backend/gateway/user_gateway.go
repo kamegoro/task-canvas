@@ -37,10 +37,6 @@ func (g *UserGateway) FindById(ctx context.Context, userId *domain.UserId) (*dom
 	return &user, nil
 }
 
-func (g *UserGateway) FindByEmailAndPasswordHash(ctx context.Context, email domain.Email, passwordHash domain.PasswordHash) (*domain.User, error) {
-	return nil, nil
-}
-
 func (g *UserGateway) Store(ctx context.Context, user *domain.User) error {
 	insertUserParams := sqlc.InsertUserParams{
 		ID:           uuid.UUID(user.Id),
@@ -61,7 +57,7 @@ func (g *UserGateway) FindByEmail(ctx context.Context, email domain.Email) (*dom
 
 	if err != nil {
 		logger.Logger.Error("UserGateway: Failed to find user by email", "email", email)
-		return nil, domain.ErrPasswordIncorrect
+		return nil, err
 	}
 
 	users := make([]domain.User, 0, len(dbUsers))

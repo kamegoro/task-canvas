@@ -50,19 +50,19 @@ func GetTodos(c echo.Context) error {
 	userIdStr := c.Get("userId").(string)
 	userIdUuid, err := uuid.Parse(userIdStr)
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to parse userId: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	todos, err := todoUseCase.Get(c.Request().Context(), domain.UserId(userIdUuid))
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to get todos: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	restods := make([]Todo, 0, len(todos))
+	resTodos := make([]Todo, 0, len(todos))
 	for _, todo := range todos {
-		restods = append(restods, Todo{
+		resTodos = append(resTodos, Todo{
 			Id:        uuid.UUID(todo.ID).String(),
 			Content:   string(todo.Content),
 			Completed: bool(todo.Completed),
@@ -70,7 +70,7 @@ func GetTodos(c echo.Context) error {
 	}
 
 	res := GetTodosResponse{
-		Todos: restods,
+		Todos: resTodos,
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -80,7 +80,7 @@ func PostTodos(c echo.Context) error {
 	reqTodo := new(PostTodosRequest)
 
 	if err := c.Bind(reqTodo); err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to bind request: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	if err := c.Validate(reqTodo); err != nil {
@@ -90,7 +90,7 @@ func PostTodos(c echo.Context) error {
 	userIdStr := c.Get("userId").(string)
 	userIdUuid, err := uuid.Parse(userIdStr)
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to parse userId: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -103,7 +103,7 @@ func PostTodos(c echo.Context) error {
 
 	todoId, err := todoUseCase.Store(ctx, domain.TodoContent(reqTodo.Content), domain.TodoCompleted(reqTodo.Completed), domain.UserId(userIdUuid))
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to store todo: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -118,7 +118,7 @@ func PutTodo(c echo.Context) error {
 	reqTodo := new(PutTodoRequest)
 
 	if err := c.Bind(reqTodo); err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to bind request: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	if err := c.Validate(reqTodo); err != nil {
@@ -128,7 +128,13 @@ func PutTodo(c echo.Context) error {
 	userIdStr := c.Get("userId").(string)
 	userIdUuid, err := uuid.Parse(userIdStr)
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to parse userId: " + err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	todoId, err := uuid.Parse(reqTodo.Id)
+	if err != nil {
+		logger.Logger.Error("Failed to parse todo id: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -137,14 +143,13 @@ func PutTodo(c echo.Context) error {
 	todoUseCase := useCase.NewUpdateTodoUseCase(todoGateway)
 
 	err = todoUseCase.UpdateTodoUseCase(c.Request().Context(), domain.Todo{
-		ID:        domain.TodoId(uuid.MustParse(reqTodo.Id)),
+		ID:        domain.TodoId(todoId),
 		Content:   domain.TodoContent(reqTodo.Content),
 		Completed: domain.TodoCompleted(reqTodo.Completed),
 		UserId:    domain.UserId(userIdUuid),
 	})
-
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to update todo: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -155,7 +160,7 @@ func DeleteTodo(c echo.Context) error {
 	reqTodo := new(DeleteTodoRequest)
 
 	if err := c.Bind(reqTodo); err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to bind request: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	if err := c.Validate(reqTodo); err != nil {
@@ -165,7 +170,13 @@ func DeleteTodo(c echo.Context) error {
 	userIdStr := c.Get("userId").(string)
 	userIdUuid, err := uuid.Parse(userIdStr)
 	if err != nil {
-		logger.Logger.Error("Failed to bind release: " + err.Error())
+		logger.Logger.Error("Failed to parse userId: " + err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	todoId, err := uuid.Parse(reqTodo.Id)
+	if err != nil {
+		logger.Logger.Error("Failed to parse todo id: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -173,9 +184,9 @@ func DeleteTodo(c echo.Context) error {
 	todoGateway := gateway.NewTodoGateway(todoDriver)
 	todoUseCase := useCase.NewDeleteTodoUseCase(todoGateway)
 
-	err = todoUseCase.Delete(c.Request().Context(), domain.TodoId(uuid.MustParse(reqTodo.Id)), domain.UserId(userIdUuid))
+	err = todoUseCase.Delete(c.Request().Context(), domain.TodoId(todoId), domain.UserId(userIdUuid))
 	if err != nil {
-		logger.Logger.Error("Failed to useCase: " + err.Error())
+		logger.Logger.Error("Failed to delete todo: " + err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
