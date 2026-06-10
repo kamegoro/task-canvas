@@ -15,7 +15,6 @@ describe('updateTodoUseCase', () => {
       new TodoId('1'),
       new TodoContent('Content 1'),
       new TodoCompleted(false),
-      mockTodoPort,
     );
 
     const sut = await new UpdateTodoUseCase(mockTodoPort).execute(mockTodo);
