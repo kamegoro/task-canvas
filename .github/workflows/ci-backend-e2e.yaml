@@ -6,6 +6,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/ci-backend-e2e.yaml"
+      - ".sdkmanrc"
       - "backend/**"
 
 permissions:

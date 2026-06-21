@@ -6,6 +6,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/ci-next-build.yaml"
+      - ".node-version"
       - "frontend/**"
 
 permissions:
