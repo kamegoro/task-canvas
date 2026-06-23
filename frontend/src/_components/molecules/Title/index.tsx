@@ -22,7 +22,7 @@ const Title: React.FC<TitleProps> = ({ sx, href }) => {
       >
         <CheckBoxIcon
           sx={{
-            color: '#4169e1',
+            color: 'brand.primary',
             fontSize: '60px',
             marginRight: '6px',
           }}
@@ -31,9 +31,8 @@ const Title: React.FC<TitleProps> = ({ sx, href }) => {
           component={'h1'}
           sx={{
             fontSize: '44px',
-            color: '#4169e1',
-            textDecoration: 'underline',
-            textDecorationColor: '#4169e1',
+            color: 'brand.primary',
+            textDecoration: 'none',
           }}
         >
           My Todo-s
