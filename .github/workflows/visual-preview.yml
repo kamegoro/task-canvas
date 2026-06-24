@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: kamegoro/frameshot@v0.8.0
+      - uses: kamegoro/frameshot@v0.9.0
         with:
           paths: "./frontend/src/_components/**/*.tsx"
           exclude: "*.test.*,*.spec.*,*.stories.*"
