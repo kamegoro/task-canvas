@@ -73,7 +73,6 @@ const Top = () => {
         </Box>
         <Box
           sx={{
-            position: 'relative',
             marginBottom: 3,
           }}
         >
@@ -93,30 +92,28 @@ const Top = () => {
               }}
               render={({ field, formState: { errors, isValid } }) => (
                 <>
-                  <Input
-                    {...field}
-                    error={errors.content ? true : false}
-                    helperText={errors.content ? errors.content.message : ''}
-                  />
-                  <Calender
+                  <Box
                     sx={{
-                      position: 'absolute',
-                      top: '15px',
-                      right: '90px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                     }}
-                    name="calendar"
-                  />
-                  <Button
-                    type="submit"
-                    sx={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '20px',
-                    }}
-                    disabled={!isValid || !field.value}
                   >
-                    Add
-                  </Button>
+                    <Box sx={{ flex: 1 }}>
+                      <Input
+                        {...field}
+                        error={errors.content ? true : false}
+                        helperText={errors.content ? errors.content.message : ''}
+                      />
+                    </Box>
+                    <Calender name="calendar" />
+                    <Button
+                      type="submit"
+                      disabled={!isValid || !field.value}
+                    >
+                      Add
+                    </Button>
+                  </Box>
                 </>
               )}
             />

@@ -58,6 +58,11 @@ export default createTheme({
     },
   },
   palette: {
+    primary: {
+      main: '#1565C0',
+      light: '#1976D2',
+      dark: '#0D47A1',
+    },
     brand: {
       primary: '#1565C0',
       white: '#FFFFFF',
@@ -70,6 +75,22 @@ export default createTheme({
     icon: {
       blue: '#1565C0',
     },
+  },
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+    ].join(','),
+    h1: { fontSize: '2.75rem', fontWeight: 700 },
+    h2: { fontSize: '2rem', fontWeight: 600 },
+    h3: { fontSize: '1.5rem', fontWeight: 600 },
+    body1: { fontSize: '1rem' },
+    body2: { fontSize: '0.875rem' },
   },
   breakpoints: {
     values: {

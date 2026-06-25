@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Checkbox from '@/_components/atoms/Checkbox';
 import Box from '@/_components/mui/Box';
@@ -13,26 +13,16 @@ export type TodoCardProps = {
 };
 
 const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
-  const [isHover, setIsHover] = useState<boolean>(false);
-
-  const visibleEditIcon: React.MouseEventHandler<HTMLDivElement> = () => {
-    setIsHover(true);
-  };
-
-  const hiddenEditIcon: React.MouseEventHandler<HTMLDivElement> = () => {
-    setIsHover(false);
-  };
-
   return (
     <Box
-      onMouseOver={visibleEditIcon}
-      onMouseLeave={hiddenEditIcon}
       sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        borderRadius: 1,
+        transition: 'background-color 0.15s',
         '&:hover': {
-          bgcolor: 'White',
+          bgcolor: 'grey.100',
         },
       }}
       aria-label="todo-card"
@@ -52,26 +42,30 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           width: '100%',
+          py: 0.5,
         }}
       >
         <Typography
           sx={{
-            fontSize: '24px',
+            fontSize: '20px',
             marginLeft: '12px',
+            opacity: checked ? 0.5 : 1,
+            textDecoration: checked ? 'line-through' : 'none',
+            transition: 'opacity 0.2s, text-decoration 0.2s',
+            color: 'gray.text',
           }}
         >
           {text}
         </Typography>
-        {isHover && (
-          <IconButton
-            aria-label="todo-edit"
-            sx={{
-              marginRight: '12px',
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-        )}
+        <IconButton
+          aria-label="todo-edit"
+          sx={{
+            marginRight: '8px',
+            color: 'icon.blue',
+          }}
+        >
+          <EditIcon />
+        </IconButton>
       </Box>
     </Box>
   );
