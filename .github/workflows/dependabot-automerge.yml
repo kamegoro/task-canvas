@@ -18,7 +18,20 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Patch and minor updates are auto-merged after CI passes
+      # Patch and minor updates are auto-approved and auto-merged after CI passes.
+      # Branch protection requires 1 approving review; dependabot[bot] can't
+      # approve its own PR, so nothing was ever satisfying that requirement
+      # and auto-merge sat blocked indefinitely. github-actions[bot] is a
+      # distinct actor from dependabot[bot], so it can supply the approval.
+      - name: Auto-approve patch and minor updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Auto-merge patch and minor updates
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
