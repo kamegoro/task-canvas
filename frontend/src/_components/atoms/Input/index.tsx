@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 
-import MuiTextField, { TextFieldProps as MuiInputProps } from '../../mui/TextField';
+import MuiTextField, { type TextFieldProps as MuiInputProps } from '../../mui/TextField';
 
 export type InputProps = Pick<
   MuiInputProps,

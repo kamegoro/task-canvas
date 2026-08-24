@@ -1,7 +1,7 @@
 import { Email } from '@/domain/credential';
 import { User } from '@/domain/user';
-import { ApiRoutesDriver } from '@/driver';
-import { UserPort } from '@/port/userPort';
+import type { ApiRoutesDriver } from '@/driver';
+import type { UserPort } from '@/port/userPort';
 
 export class UserGateway implements UserPort {
   private readonly apiRoutesDriver: ApiRoutesDriver;

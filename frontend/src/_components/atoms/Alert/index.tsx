@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import { Theme, SxProps } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 
-import MuiAlert, { AlertPropsType as AlertProps } from '@/_components/mui/Alert';
+import MuiAlert, { type AlertPropsType as AlertProps } from '@/_components/mui/Alert';
 
 export type AlertPropsType = Pick<AlertProps, 'severity' | 'children' | 'sx'>;
 

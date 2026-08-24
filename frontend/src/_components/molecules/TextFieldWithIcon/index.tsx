@@ -1,6 +1,6 @@
-import { forwardRef, memo, ReactNode } from 'react';
+import { forwardRef, memo, type ReactNode } from 'react';
 
-import TextField, { TextFieldProps as TextFieldPropsType } from '@/_components/mui/TextField';
+import TextField, { type TextFieldProps as TextFieldPropsType } from '@/_components/mui/TextField';
 
 const TextFieldWithIcon = memo(
   forwardRef<

@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import MuiInput, { InputProps as MuiInputProps } from '@mui/material/Input';
+import MuiInput, { type InputProps as MuiInputProps } from '@mui/material/Input';
 
 export type InputProps = MuiInputProps;
 

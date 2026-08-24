@@ -1,9 +1,6 @@
-import React from 'react';
-
 import type { Meta, StoryFn } from '@storybook/nextjs';
 
 import EditIcon from '../EditIcon';
-
 import IconButton from '.';
 
 const meta = {

@@ -1,6 +1,6 @@
-import { TodoCompleted, TodoContent } from '@/domain/todo';
-import { ApiRoutesDriver } from '@/driver';
-import { RegisterTodoPort } from '@/port/registerTodoPort';
+import type { TodoCompleted, TodoContent } from '@/domain/todo';
+import type { ApiRoutesDriver } from '@/driver';
+import type { RegisterTodoPort } from '@/port/registerTodoPort';
 
 export class RegisterTodoGateway implements RegisterTodoPort {
   private readonly apiRoutesDriver: ApiRoutesDriver;

@@ -1,6 +1,5 @@
-import { ReactNode } from 'react';
-
 import { useRouter } from 'next/navigation';
+import type { ReactNode } from 'react';
 
 import Box from '@/_components/mui/Box';
 import Button from '@/_components/mui/Button';

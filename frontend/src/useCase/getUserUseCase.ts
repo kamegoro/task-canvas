@@ -1,5 +1,5 @@
-import { User } from '@/domain/user';
-import { UserPort } from '@/port/userPort';
+import type { User } from '@/domain/user';
+import type { UserPort } from '@/port/userPort';
 
 interface GetUserUseCaseInterface {
   execute(): Promise<User>;

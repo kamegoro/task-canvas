@@ -1,4 +1,4 @@
-import { Email } from './credential';
+import type { Email } from './credential';
 
 export class User {
   constructor(private readonly email: Email) {}

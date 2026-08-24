@@ -1,6 +1,9 @@
-import React from 'react';
+import type React from 'react';
 
-import { Typography as MuiTypography, TypographyProps as MuiTypographyProps } from '@mui/material';
+import {
+  Typography as MuiTypography,
+  type TypographyProps as MuiTypographyProps,
+} from '@mui/material';
 
 export type TypographyProps = MuiTypographyProps;
 

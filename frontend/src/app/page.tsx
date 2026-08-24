@@ -1,6 +1,6 @@
 'use client';
 
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 
 import Button from '@/_components/atoms/Button';
 import Input from '@/_components/atoms/Input';
@@ -95,7 +95,7 @@ const Top = () => {
                 <>
                   <Input
                     {...field}
-                    error={errors.content ? true : false}
+                    error={!!errors.content}
                     helperText={errors.content ? errors.content.message : ''}
                   />
                   <Calender

@@ -1,5 +1,5 @@
-import { RegisterTodo } from '@/domain/todo';
-import { RegisterTodoPort } from '@/port/registerTodoPort';
+import type { RegisterTodo } from '@/domain/todo';
+import type { RegisterTodoPort } from '@/port/registerTodoPort';
 
 interface StoreTodoUseCaseInterface {
   execute: (registerTodo: RegisterTodo) => Promise<void>;

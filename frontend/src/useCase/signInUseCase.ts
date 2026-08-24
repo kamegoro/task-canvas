@@ -1,5 +1,5 @@
-import { Credential } from '@/domain/credential';
-import { CredentialPort } from '@/port/credentialPort';
+import type { Credential } from '@/domain/credential';
+import type { CredentialPort } from '@/port/credentialPort';
 
 interface SignInUseCaseInterface {
   execute: (credential: Credential) => Promise<void>;

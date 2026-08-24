@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Divider as MuiDivider, DividerProps as MuiDividerProps } from '@mui/material';
+import { Divider as MuiDivider, type DividerProps as MuiDividerProps } from '@mui/material';
 
 export type DividerProps = MuiDividerProps;
 

@@ -1,5 +1,5 @@
-import { Todos } from '@/domain/todo';
-import { TodoPort } from '@/port/todoPort';
+import type { Todos } from '@/domain/todo';
+import type { TodoPort } from '@/port/todoPort';
 
 interface GetTodosUseCaseInterface {
   execute: () => Promise<Todos>;

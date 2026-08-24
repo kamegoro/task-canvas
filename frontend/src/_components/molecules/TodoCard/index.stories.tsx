@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import type { Meta, StoryFn } from '@storybook/nextjs';
 
-import TodoCard, { TodoCardProps } from '.';
+import TodoCard, { type TodoCardProps } from '.';
 
 const meta = {
   component: TodoCard,

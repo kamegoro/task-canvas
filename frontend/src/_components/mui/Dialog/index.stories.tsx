@@ -3,7 +3,6 @@ import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/nextjs';
 
 import Button from '@/_components/mui/Button';
-
 import Dialog from '.';
 
 const meta = {

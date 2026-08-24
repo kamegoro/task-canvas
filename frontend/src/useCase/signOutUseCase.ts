@@ -1,4 +1,4 @@
-import { SignOutPort } from '@/port/signOutPort';
+import type { SignOutPort } from '@/port/signOutPort';
 
 interface SignOutUseCaseInterface {
   execute: () => void;
