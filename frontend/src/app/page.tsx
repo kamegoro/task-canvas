@@ -110,7 +110,7 @@ const Top = () => {
                 sx={{ flexShrink: 0, marginBottom: '4px' }}
                 disabled={!isValid || !field.value}
               >
-                追加
+                Add
               </Button>
             </Box>
           )}
@@ -149,13 +149,15 @@ const Top = () => {
         />
       </Box>
       <Box
+        component="ul"
         role="list"
         aria-label="todo-list"
-        sx={{ marginTop: '12px' }}
+        sx={{ listStyle: 'none', margin: 0, padding: 0, marginTop: '12px' }}
       >
         {todos.map((todo) => {
           return (
             <Box
+              component="li"
               role="listitem"
               aria-label="todo-item"
               key={todo.id}
