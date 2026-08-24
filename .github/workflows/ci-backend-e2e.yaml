@@ -67,7 +67,7 @@ jobs:
           echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
 
       - name: Start minikube
-        uses: medyagh/setup-minikube@latest
+        uses: medyagh/setup-minikube@v0.0.21
 
       - name: Skaffold Build
         run: |
