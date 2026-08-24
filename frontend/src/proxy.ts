@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 const BASE_URL = process.env.NEXT_BACKEND_BASE_URL;
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get('token');
 
   if (token === undefined) {
