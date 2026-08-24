@@ -12,12 +12,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const TodoCheckbox: Story = {
+export const Checked: Story = {
   args: {
-    sx: {
-      '.MuiSvgIcon-root': {
-        fontSize: '1.5rem',
-      },
-    },
+    checked: true,
   },
 };

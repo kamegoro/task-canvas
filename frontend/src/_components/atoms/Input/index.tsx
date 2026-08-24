@@ -15,19 +15,31 @@ const Input: React.FC<InputProps> = ({ onChange, value, error, helperText, name 
       name={name}
       value={value}
       onChange={onChange}
-      placeholder="Add new .."
+      placeholder="タスクを入力"
       error={error}
       helperText={helperText}
+      variant="standard"
+      fullWidth
+      slotProps={{
+        input: {
+          disableUnderline: false,
+        },
+      }}
       sx={{
-        boxShadow: 1,
-        paddingLeft: 3,
-        paddingRight: 6,
-        borderRadius: 0.5,
-        boxSizing: 'border-box',
         width: '100%',
-        backgroundColor: '#FFF',
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderStyle: 'none',
+        '& .MuiInput-root': {
+          fontSize: '16px',
+          paddingBottom: '10px',
+          paddingRight: '32px',
+        },
+        '& .MuiInput-underline:before': {
+          borderBottomColor: 'divider',
+        },
+        '& .MuiInput-underline:hover:not(.Mui-disabled, .Mui-error):before': {
+          borderBottomColor: 'text.secondary',
+        },
+        '& .MuiInput-underline:after': {
+          borderBottomColor: 'primary.main',
         },
       }}
     />

@@ -1,4 +1,7 @@
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import type { Preview } from '@storybook/nextjs';
+
+import { createAppTheme } from '../src/styles/theme';
 
 const preview: Preview = {
   parameters: {
@@ -10,6 +13,14 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider theme={createAppTheme('light')}>
+        <CssBaseline />
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default preview;

@@ -1,7 +1,7 @@
-import Script from 'next/script';
-import React, { type FC, useState } from 'react';
+import type { FC } from 'react';
 
-import { createComponent } from '@lit/react';
+import Box from '@/_components/mui/Box';
+import Typography from '@/_components/mui/Typography';
 
 type TaskProgressProps = {
   allCount: number;
@@ -9,37 +9,53 @@ type TaskProgressProps = {
 };
 
 const TaskProgress: FC<TaskProgressProps> = ({ allCount, currentCount }) => {
-  const [TaskProgressComponent, setTaskProgressComponent] = useState<FC<TaskProgressProps> | null>(
-    null,
-  );
-
-  const handleScriptLoad = () => {
-    const TaskProgressElement = customElements.get('task-progress');
-    if (TaskProgressElement) {
-      const Component = createComponent({
-        react: React,
-        tagName: 'task-progress',
-        elementClass: TaskProgressElement,
-      });
-      setTaskProgressComponent(() => Component);
-    }
-  };
+  const percentage = allCount > 0 ? Math.min(100, (currentCount / allCount) * 100) : 0;
 
   return (
-    <>
-      <Script
-        src="http://localhost:11000/task-progress.js"
-        type="module"
-        strategy="afterInteractive"
-        onLoad={handleScriptLoad}
-      />
-      {TaskProgressComponent && (
-        <TaskProgressComponent
-          allCount={allCount}
-          currentCount={currentCount}
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        width: '100%',
+      }}
+    >
+      <Box
+        role="progressbar"
+        aria-label="達成率"
+        aria-valuenow={currentCount}
+        aria-valuemin={0}
+        aria-valuemax={allCount}
+        sx={{
+          flex: 1,
+          height: '6px',
+          borderRadius: '999px',
+          backgroundColor: 'tokens.track',
+          overflow: 'hidden',
+        }}
+      >
+        <Box
+          sx={{
+            height: '100%',
+            width: `${percentage}%`,
+            borderRadius: '999px',
+            backgroundColor: 'primary.main',
+            transition: 'width 0.3s ease',
+          }}
         />
-      )}
-    </>
+      </Box>
+      <Typography
+        component="span"
+        sx={{
+          fontSize: '13px',
+          fontWeight: 500,
+          color: 'text.secondary',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {currentCount} / {allCount}
+      </Typography>
+    </Box>
   );
 };
 
