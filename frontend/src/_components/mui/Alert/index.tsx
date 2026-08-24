@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MuiAlert, { type AlertProps } from '@mui/material/Alert';
 
 export type AlertPropsType = AlertProps;
 

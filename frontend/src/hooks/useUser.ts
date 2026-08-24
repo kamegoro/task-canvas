@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-
 import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useDI } from '@/context/DIContext';
 

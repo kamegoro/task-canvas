@@ -1,4 +1,4 @@
-import { Todos, Todo, TodoId, RegisterTodo } from '@/domain/todo';
+import type { RegisterTodo, Todo, TodoId, Todos } from '@/domain/todo';
 
 export interface TodoPort {
   getTodos: () => Promise<Todos>;

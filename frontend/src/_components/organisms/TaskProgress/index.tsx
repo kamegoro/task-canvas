@@ -1,6 +1,5 @@
-import React, { FC, useState } from 'react';
-
 import Script from 'next/script';
+import React, { type FC, useState } from 'react';
 
 import { createComponent } from '@lit/react';
 

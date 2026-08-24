@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import { AppBar as MuiAppBar, AppBarProps as MuiAppBarProps } from '@mui/material';
+import { AppBar as MuiAppBar, type AppBarProps as MuiAppBarProps } from '@mui/material';
 
 export type AppBarProps = MuiAppBarProps;
 

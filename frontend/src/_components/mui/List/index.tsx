@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import MuiList, { ListProps as MuiListProps } from '@mui/material/List';
+import MuiList, { type ListProps as MuiListProps } from '@mui/material/List';
 
 export type ListProps = MuiListProps;
 

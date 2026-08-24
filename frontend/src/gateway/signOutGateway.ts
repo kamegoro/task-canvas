@@ -1,5 +1,5 @@
-import { ApiRoutesDriver } from '@/driver';
-import { SignOutPort } from '@/port/signOutPort';
+import type { ApiRoutesDriver } from '@/driver';
+import type { SignOutPort } from '@/port/signOutPort';
 
 export class SignOutGateway implements SignOutPort {
   constructor(private readonly apiRoutesDriver: ApiRoutesDriver) {}

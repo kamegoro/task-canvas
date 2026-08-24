@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Checkbox as MuiCheckbox, CheckboxProps as MuiCheckboxProps } from '@mui/material';
+import { Checkbox as MuiCheckbox, type CheckboxProps as MuiCheckboxProps } from '@mui/material';
 
 export type CheckboxProps = MuiCheckboxProps;
 

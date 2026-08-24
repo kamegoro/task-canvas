@@ -1,5 +1,4 @@
 import { TodoCompleted, TodoContent, TodoId } from '@/domain/todo';
-
 import { GetTodosUseCase } from './getTodosUseCase';
 
 describe('getTodoUseCase', () => {

@@ -1,6 +1,6 @@
-import { Credential } from '@/domain/credential';
-import { ApiRoutesDriver } from '@/driver';
-import { CredentialPort } from '@/port/credentialPort';
+import type { Credential } from '@/domain/credential';
+import type { ApiRoutesDriver } from '@/driver';
+import type { CredentialPort } from '@/port/credentialPort';
 
 export class CredentialGateway implements CredentialPort {
   constructor(private apiRoutesDriver: ApiRoutesDriver) {}

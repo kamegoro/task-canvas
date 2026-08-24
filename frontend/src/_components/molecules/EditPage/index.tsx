@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Button from '@/_components/atoms/Button';
 import Box from '@/_components/mui/Box';
 import Dialog from '@/_components/mui/Dialog';
-import TextFiled, { TextFieldProps } from '@/_components/mui/TextField';
+import TextFiled, { type TextFieldProps } from '@/_components/mui/TextField';
 
 export type EditPageProps = {
   id: string;

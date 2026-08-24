@@ -1,6 +1,6 @@
-import { Todos, Todo, TodoCompleted, TodoContent, TodoId, RegisterTodo } from '@/domain/todo';
-import { ApiRoutesDriver } from '@/driver';
-import { TodoPort } from '@/port/todoPort';
+import { type RegisterTodo, Todo, TodoCompleted, TodoContent, TodoId, Todos } from '@/domain/todo';
+import type { ApiRoutesDriver } from '@/driver';
+import type { TodoPort } from '@/port/todoPort';
 
 export default class TodoGateway implements TodoPort {
   private readonly apiRoutesDriver: ApiRoutesDriver;
