@@ -11,9 +11,10 @@ export type TodoCardProps = {
   text: string;
   checked: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  onEditClick: () => void;
 };
 
-const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
+const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text, onEditClick }) => {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   const visibleEditIcon: React.MouseEventHandler<HTMLDivElement> = () => {
@@ -66,6 +67,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
         {isHover && (
           <IconButton
             aria-label="todo-edit"
+            onClick={onEditClick}
             sx={{
               marginRight: '12px',
             }}

@@ -8,11 +8,13 @@ import { useTodo } from '@/hooks/useTodo';
 const mockGetTodosExecute = vi.fn();
 const mockStoreTodoExecute = vi.fn();
 const mockUpdateTodoExecute = vi.fn();
+const mockDeleteTodoExecute = vi.fn();
 
 const diMock = {
   getTodosUseCase: { execute: mockGetTodosExecute },
   storeTodoUseCase: { execute: mockStoreTodoExecute },
   updateTodoUseCase: { execute: mockUpdateTodoExecute },
+  deleteTodoUseCase: { execute: mockDeleteTodoExecute },
 };
 
 vi.mock('@/context/DIContext', () => ({
@@ -148,6 +150,50 @@ describe('useTodo', () => {
         },
       ]);
     });
+  });
+
+  it('既存のTodoを削除する', async () => {
+    class MockInitialTodo1 {
+      getId = vi.fn().mockReturnValue('1');
+      getContent = vi.fn().mockReturnValue('Todo 1');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+    class MockInitialTodo2 {
+      getId = vi.fn().mockReturnValue('2');
+      getContent = vi.fn().mockReturnValue('Todo 2');
+      getCompleted = vi.fn().mockReturnValue(false);
+    }
+
+    const initialTodosResponse = {
+      value: [new MockInitialTodo1(), new MockInitialTodo2()],
+    };
+    mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
+
+    const { result } = renderHook(() => useTodo(), { wrapper: createWrapper() });
+
+    await waitFor(() => {
+      expect(result.current.todos).toStrictEqual([
+        { id: '1', content: 'Todo 1', completed: false },
+        { id: '2', content: 'Todo 2', completed: false },
+      ]);
+    });
+
+    mockDeleteTodoExecute.mockResolvedValueOnce(undefined);
+
+    const afterDeleteResponse = { value: [new MockInitialTodo2()] };
+    mockGetTodosExecute.mockResolvedValue(afterDeleteResponse);
+
+    await act(async () => {
+      await result.current.deleteTodo('1');
+    });
+
+    await waitFor(() => {
+      expect(result.current.todos).toStrictEqual([
+        { id: '2', content: 'Todo 2', completed: false },
+      ]);
+    });
+
+    expect(mockDeleteTodoExecute).toHaveBeenCalledTimes(1);
   });
 
   it('Todoの進捗率を取得する', async () => {

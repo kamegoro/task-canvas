@@ -20,10 +20,11 @@ interface UseTodoInterface {
   };
   addTodo: (content: string) => Promise<void>;
   updateTodo: (id: string, content: string, completed: boolean) => Promise<void>;
+  deleteTodo: (id: string) => Promise<void>;
 }
 
 export const useTodo = (): UseTodoInterface => {
-  const { getTodosUseCase, storeTodoUseCase, updateTodoUseCase } = useDI();
+  const { getTodosUseCase, storeTodoUseCase, updateTodoUseCase, deleteTodoUseCase } = useDI();
   const queryClient = useQueryClient();
 
   const { data: todos = [] } = useQuery({
@@ -92,6 +93,13 @@ export const useTodo = (): UseTodoInterface => {
     },
   });
 
+  const deleteTodoMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await deleteTodoUseCase.execute(new TodoId(id));
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: todosQueryKey }),
+  });
+
   const addTodo = async (content: string): Promise<void> => {
     await addTodoMutation.mutateAsync(content);
   };
@@ -100,5 +108,9 @@ export const useTodo = (): UseTodoInterface => {
     await updateTodoMutation.mutateAsync({ id, content, completed });
   };
 
-  return { todos, progress, addTodo, updateTodo };
+  const deleteTodo = async (id: string): Promise<void> => {
+    await deleteTodoMutation.mutateAsync(id);
+  };
+
+  return { todos, progress, addTodo, updateTodo, deleteTodo };
 };
