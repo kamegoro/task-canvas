@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
 import { Button } from '@mui/material';
-
 import type { Meta, StoryFn } from '@storybook/nextjs';
 
-import EditPage, { EditPageProps } from '.';
+import EditPage, { type EditPageProps } from '.';
 
 const meta = {
   component: EditPage,

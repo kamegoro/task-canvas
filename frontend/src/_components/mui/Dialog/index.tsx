@@ -1,4 +1,4 @@
-import MuiDialog, { DialogProps as MuiDialogProps } from '@mui/material/Dialog';
+import MuiDialog, { type DialogProps as MuiDialogProps } from '@mui/material/Dialog';
 
 export type DialogProps = MuiDialogProps;
 

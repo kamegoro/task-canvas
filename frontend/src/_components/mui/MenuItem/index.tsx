@@ -1,4 +1,4 @@
-import MuiMenuItem, { MenuItemProps as MuiMenuItemProps } from '@mui/material/MenuItem';
+import MuiMenuItem, { type MenuItemProps as MuiMenuItemProps } from '@mui/material/MenuItem';
 
 export type MenuItemProps = MuiMenuItemProps;
 

@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import MuiButton, { ButtonProps as MuiButtonProps } from '../../mui/Button';
+import MuiButton, { type ButtonProps as MuiButtonProps } from '../../mui/Button';
 
 export type ButtonProps = Pick<MuiButtonProps, 'children' | 'sx' | 'onClick' | 'disabled' | 'type'>;
 

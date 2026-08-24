@@ -1,6 +1,7 @@
-import React, { useState, createContext, useContext } from 'react';
+import type React from 'react';
+import { createContext, useContext, useState } from 'react';
 
-import Alert, { AlertPropsType } from '@/_components/atoms/Alert';
+import Alert, { type AlertPropsType } from '@/_components/atoms/Alert';
 import Box from '@/_components/mui/Box';
 
 interface SnackValues {

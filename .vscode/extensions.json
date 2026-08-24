@@ -1,8 +1,7 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode", // formatter
+    "biomejs.biome", // formatter & linter
     "streetsidesoftware.code-spell-checker", // typo checker
-    "dbaeumer.vscode-eslint", // linter
     "aaron-bond.better-comments", // commnet highlighter
     "stylelint.vscode-stylelint" // css linter
   ]

@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Stack as MuiStack, StackProps as MuiStackProps } from '@mui/material';
+import { Stack as MuiStack, type StackProps as MuiStackProps } from '@mui/material';
 
 export type StackProps = MuiStackProps;
 

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useState } from 'react';
 
 import { Menu as MenuIcon } from '@mui/icons-material';
 

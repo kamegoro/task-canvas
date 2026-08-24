@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import MuiCheckbox, { CheckboxProps as MuiCheckboxProps } from '../../mui/Checkbox';
+import MuiCheckbox, { type CheckboxProps as MuiCheckboxProps } from '../../mui/Checkbox';
 
 export type CheckboxProps = Pick<MuiCheckboxProps, 'sx' | 'checked' | 'onChange'>;
 

@@ -1,4 +1,4 @@
-import { Credential } from '../domain/credential';
+import type { Credential } from '../domain/credential';
 
 export interface CredentialPort {
   signIn(credential: Credential): Promise<void>;

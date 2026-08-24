@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import { useSignIn } from '@/hooks/useSignIn';
@@ -6,9 +6,11 @@ import { useSignIn } from '@/hooks/useSignIn';
 const mockSignInExecute = vi.fn();
 
 vi.mock('@/domain/credential', () => {
+  // biome-ignore lint/complexity/useArrowFunction: must stay a constructor function so `new Email(...)` works
   const FakeEmail = vi.fn().mockImplementation(function (value: string) {
     return { value };
   });
+  // biome-ignore lint/complexity/useArrowFunction: must stay a constructor function so `new Password(...)` works
   const FakePassword = vi.fn().mockImplementation(function (value: string) {
     return { value };
   });

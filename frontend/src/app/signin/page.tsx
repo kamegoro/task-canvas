@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import {
   ArrowForward as ArrowForwardIcon,
@@ -10,13 +9,11 @@ import {
   MailOutlined as MailOutlineIcon,
 } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 
 import { useSnackbar } from '@/_components/contexts/SnackbarContext';
 import TextFieldWithIcon from '@/_components/molecules/TextFieldWithIcon';
 import Box from '@/_components/mui/Box';
-
 import Button from '@/_components/mui/Button';
 import Stack from '@/_components/mui/Stack';
 import RegistrationFormBox from '@/_components/organisms/RegistrationFormBox';
@@ -66,7 +63,7 @@ const SignIn = () => {
           render={({ field, formState: { errors } }) => (
             <TextFieldWithIcon
               {...field}
-              error={errors.email ? true : false}
+              error={!!errors.email}
               name="mail"
               label="メール"
               placeholder="メールを入力してください"
@@ -88,7 +85,7 @@ const SignIn = () => {
           render={({ field, formState: { errors } }) => (
             <TextFieldWithIcon
               {...field}
-              error={errors.password ? true : false}
+              error={!!errors.password}
               name="password"
               label="パスワード"
               type="password"

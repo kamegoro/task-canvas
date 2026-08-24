@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 
 import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
 
 import Box from '@/_components/mui/Box';
-import Link, { LinkProps } from '@/_components/mui/Link';
+import Link, { type LinkProps } from '@/_components/mui/Link';
 import Typography from '@/_components/mui/Typography';
 
 export type TitleProps = Pick<LinkProps, 'sx' | 'href'>;

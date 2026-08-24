@@ -1,5 +1,5 @@
-import { Todo } from '@/domain/todo';
-import { TodoPort } from '@/port/todoPort';
+import type { Todo } from '@/domain/todo';
+import type { TodoPort } from '@/port/todoPort';
 
 interface UpdateTodoUseCaseInterface {
   execute: (todo: Todo) => Promise<void>;
