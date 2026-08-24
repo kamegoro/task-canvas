@@ -43,7 +43,7 @@ jobs:
           path: task-canvas-e2e
 
       - name: Set up mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
 
       - name: Install k8s-infrastructure tools
         run: |
