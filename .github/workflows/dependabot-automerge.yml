@@ -33,13 +33,11 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # No required status checks are configured on this branch, so `gh pr
-      # merge --auto` below has nothing to wait for — this step makes it wait.
       - name: Wait for other checks to complete
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
           steps.metadata.outputs.update-type == 'version-update:semver-minor'
-        uses: lewagon/wait-on-check-action@07b3e1aff439a8dcbe1df42d433fe8f3e5c1db8c # v1.9.1
+        uses: lewagon/wait-on-check-action@v1.9.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           running-workflow-name: 'Dependabot Auto-merge'
