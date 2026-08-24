@@ -33,12 +33,8 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Branch protection has no required status checks configured, so a
-      # plain `gh pr merge --auto` has nothing to wait for besides the review
-      # above and merges within seconds — before next-build/storybook-build/
-      # web-e2e etc. even finish. Wait for every other check on the PR's head
-      # commit (excluding this workflow's own run, to avoid self-deadlock)
-      # before merging for real.
+      # No required status checks are configured on this branch, so `gh pr
+      # merge --auto` below has nothing to wait for — this step makes it wait.
       - name: Wait for other checks to complete
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
