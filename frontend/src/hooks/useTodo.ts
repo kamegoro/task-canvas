@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useDI } from '@/context/DIContext';
 import { RegisterTodo, Todo, TodoCompleted, TodoContent, TodoId } from '@/domain/todo';
+import { todosQueryKey } from '@/hooks/queryKeys';
 
 type ViewTodo = {
   id: string;
@@ -21,7 +24,22 @@ interface UseTodoInterface {
 
 export const useTodo = (): UseTodoInterface => {
   const { getTodosUseCase, storeTodoUseCase, updateTodoUseCase } = useDI();
-  const [todos, setTodos] = useState<ViewTodo[]>([]);
+  const queryClient = useQueryClient();
+
+  const { data: todos = [] } = useQuery({
+    queryKey: todosQueryKey,
+    queryFn: async (): Promise<ViewTodo[]> => {
+      const todos = await getTodosUseCase.execute();
+
+      return todos.value.map((todo) => {
+        return {
+          id: todo.getId(),
+          content: todo.getContent(),
+          completed: todo.getCompleted(),
+        };
+      });
+    },
+  });
 
   const progress = useMemo(() => {
     const completedCount = todos.filter((todo) => todo.completed).length;
@@ -33,42 +51,34 @@ export const useTodo = (): UseTodoInterface => {
     };
   }, [todos]);
 
-  const getTodos = useCallback(async (): Promise<ViewTodo[]> => {
-    const todos = await getTodosUseCase.execute();
-
-    const viewTodos: ViewTodo[] = todos.value.map((todo) => {
-      return {
-        id: todo.getId(),
-        content: todo.getContent(),
-        completed: todo.getCompleted(),
-      };
-    });
-
-    return viewTodos;
-  }, [getTodosUseCase]);
-
-  const addTodo = useCallback(
-    async (content: string) => {
+  const addTodoMutation = useMutation({
+    mutationFn: async (content: string) => {
       const registerTodo = RegisterTodo.factory(new TodoContent(content), new TodoCompleted(false));
       await storeTodoUseCase.execute(registerTodo);
-
-      const newTodos = await getTodos();
-      setTodos(newTodos);
     },
-    [storeTodoUseCase, getTodos],
-  );
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: todosQueryKey }),
+  });
 
-  const updateTodo = useCallback(
-    async (id: string, content: string, completed: boolean) => {
+  const updateTodoMutation = useMutation({
+    mutationFn: async ({
+      id,
+      content,
+      completed,
+    }: {
+      id: string;
+      content: string;
+      completed: boolean;
+    }) => {
       const todo = Todo.factory(
         new TodoId(id),
         new TodoContent(content),
         new TodoCompleted(completed),
       );
       await updateTodoUseCase.execute(todo);
-
-      setTodos((prevTodos) => {
-        return prevTodos.map((prevTodo) => {
+    },
+    onSuccess: (_data, { id, content, completed }) => {
+      queryClient.setQueryData<ViewTodo[]>(todosQueryKey, (prevTodos) => {
+        return (prevTodos ?? []).map((prevTodo) => {
           if (prevTodo.id === id) {
             return {
               ...prevTodo,
@@ -80,14 +90,15 @@ export const useTodo = (): UseTodoInterface => {
         });
       });
     },
-    [updateTodoUseCase],
-  );
+  });
 
-  useEffect(() => {
-    getTodos().then((result) => {
-      setTodos(result);
-    });
-  }, [getTodos]);
+  const addTodo = async (content: string): Promise<void> => {
+    await addTodoMutation.mutateAsync(content);
+  };
+
+  const updateTodo = async (id: string, content: string, completed: boolean): Promise<void> => {
+    await updateTodoMutation.mutateAsync({ id, content, completed });
+  };
 
   return { todos, progress, addTodo, updateTodo };
 };

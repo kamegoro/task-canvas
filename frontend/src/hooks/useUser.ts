@@ -1,7 +1,9 @@
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+
+import { useQuery } from '@tanstack/react-query';
 
 import { useDI } from '@/context/DIContext';
+import { userQueryKey } from '@/hooks/queryKeys';
 
 type User = {
   email: string;
@@ -13,30 +15,23 @@ interface UseUserInterface {
   };
 }
 
+const EMPTY_USER: User = { email: '' };
+
 export const useUser = (): UseUserInterface => {
   const { getUserUseCase } = useDI();
-  const [user, setUser] = useState<User>({ email: '' });
   const pathname = usePathname();
+  const isAuthPage = pathname === '/signin' || pathname === '/signup';
 
-  const getUser = useCallback(async () => {
-    const res = await getUserUseCase.execute();
-    setUser({
-      email: res.getEmail().getValue(),
-    });
-  }, [getUserUseCase]);
-
-  useEffect(() => {
-    if (pathname === '/signin' || pathname === '/signup') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUser({ email: '' });
-      return;
-    }
-    (async () => {
-      await getUser();
-    })();
-  }, [getUser, pathname]);
+  const { data: user = EMPTY_USER } = useQuery({
+    queryKey: userQueryKey,
+    queryFn: async (): Promise<User> => {
+      const res = await getUserUseCase.execute();
+      return { email: res.getEmail().getValue() };
+    },
+    enabled: !isAuthPage,
+  });
 
   return {
-    user,
+    user: isAuthPage ? EMPTY_USER : user,
   };
 };

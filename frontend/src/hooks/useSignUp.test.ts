@@ -1,6 +1,18 @@
+import { createElement } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 
 import { useSignUp } from '@/hooks/useSignUp';
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return ({ children }: { children: React.ReactNode }) =>
+    createElement(QueryClientProvider, { client: queryClient }, children);
+};
 
 const mockSignUpExecute = vi.fn();
 
@@ -58,7 +70,7 @@ beforeEach(() => {
 
 describe('useSignUp', () => {
   it('新しいユーザーを登録する', async () => {
-    const { result } = renderHook(() => useSignUp());
+    const { result } = renderHook(() => useSignUp(), { wrapper: createWrapper() });
 
     const dummyCredential = new Credential(
       new Email('test@example.com'),

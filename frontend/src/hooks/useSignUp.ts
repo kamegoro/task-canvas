@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 import { useDI } from '@/context/DIContext';
 import { Credential, Email, Password } from '@/domain/credential';
@@ -10,18 +10,19 @@ interface UseSignUpInterface {
 export const useSignUp = (): UseSignUpInterface => {
   const { signUpUseCase } = useDI();
 
-  const execute = useCallback(
-    async (email: string, password: string): Promise<void> => {
-      try {
-        const credential = Credential.factory(new Email(email), new Password(password));
-        await signUpUseCase.execute(credential);
-      } catch (error) {
-        console.error('useSignUp: エラー発生:', error);
-        throw error;
-      }
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({ email, password }: { email: string; password: string }) => {
+      const credential = Credential.factory(new Email(email), new Password(password));
+      await signUpUseCase.execute(credential);
     },
-    [signUpUseCase],
-  );
+    onError: (error) => {
+      console.error('useSignUp: エラー発生:', error);
+    },
+  });
+
+  const execute = async (email: string, password: string): Promise<void> => {
+    await mutateAsync({ email, password });
+  };
 
   return { execute };
 };

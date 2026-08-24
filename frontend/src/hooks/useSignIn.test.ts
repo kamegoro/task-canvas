@@ -1,7 +1,19 @@
+import { createElement } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import { useSignIn } from '@/hooks/useSignIn';
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return ({ children }: { children: React.ReactNode }) =>
+    createElement(QueryClientProvider, { client: queryClient }, children);
+};
 
 const mockSignInExecute = vi.fn();
 
@@ -59,7 +71,7 @@ afterEach(() => {
 
 describe('useSignIn', () => {
   it('サインイン処理を実行する', async () => {
-    const { result } = renderHook(() => useSignIn());
+    const { result } = renderHook(() => useSignIn(), { wrapper: createWrapper() });
 
     const dummyCredential = new Credential(
       new Email('test@example.com'),
