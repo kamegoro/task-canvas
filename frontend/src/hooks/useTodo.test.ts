@@ -1,3 +1,6 @@
+import { createElement } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { useTodo } from '@/hooks/useTodo';
@@ -15,6 +18,15 @@ const diMock = {
 vi.mock('@/context/DIContext', () => ({
   useDI: () => diMock,
 }));
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return ({ children }: { children: React.ReactNode }) =>
+    createElement(QueryClientProvider, { client: queryClient }, children);
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -39,7 +51,7 @@ describe('useTodo', () => {
       },
     ];
 
-    const { result } = renderHook(() => useTodo());
+    const { result } = renderHook(() => useTodo(), { wrapper: createWrapper() });
 
     await waitFor(() => expect(result.current.todos).toEqual(expected));
 
@@ -55,7 +67,7 @@ describe('useTodo', () => {
     const initialTodosResponse = { value: [new MockInitialTodo()] };
     mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
 
-    const { result } = renderHook(() => useTodo());
+    const { result } = renderHook(() => useTodo(), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.todos).toStrictEqual([
@@ -109,7 +121,7 @@ describe('useTodo', () => {
     const initialTodosResponse = { value: [new MockInitialTodo()] };
     mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
 
-    const { result } = renderHook(() => useTodo());
+    const { result } = renderHook(() => useTodo(), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.todos).toStrictEqual([
@@ -153,7 +165,7 @@ describe('useTodo', () => {
 
     const initialTodosResponse = { value: [new MockInitialTodo1(), new MockInitialTodo2()] };
     mockGetTodosExecute.mockResolvedValueOnce(initialTodosResponse);
-    const { result } = renderHook(() => useTodo());
+    const { result } = renderHook(() => useTodo(), { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(result.current.progress).toStrictEqual({

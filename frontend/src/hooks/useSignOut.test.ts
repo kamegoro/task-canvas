@@ -1,4 +1,7 @@
-import { act, renderHook } from '@testing-library/react';
+import { createElement } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { useSignOut } from '@/hooks/useSignOut';
 
@@ -10,18 +13,27 @@ vi.mock('@/context/DIContext', () => ({
   }),
 }));
 
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return ({ children }: { children: React.ReactNode }) =>
+    createElement(QueryClientProvider, { client: queryClient }, children);
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
 describe('useSignOut', () => {
-  it('サインアウトの成功', () => {
-    const { result } = renderHook(() => useSignOut());
+  it('サインアウトの成功', async () => {
+    const { result } = renderHook(() => useSignOut(), { wrapper: createWrapper() });
 
     act(() => {
       result.current.execute();
     });
 
-    expect(mockSignOutExecute).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(mockSignOutExecute).toHaveBeenCalledTimes(1));
   });
 });
