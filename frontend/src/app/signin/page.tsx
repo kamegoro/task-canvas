@@ -72,7 +72,7 @@ const SignIn = () => {
               disabled={isLoading}
               icon={
                 <MailOutlineIcon
-                  sx={{ color: 'icon.blue', height: 20, wight: 20, marginRight: 1 }}
+                  sx={{ color: 'primary.main', height: 20, wight: 20, marginRight: 1 }}
                 />
               }
             />
@@ -92,7 +92,9 @@ const SignIn = () => {
               placeholder="パスワードを入力してください"
               disabled={isLoading}
               helperText={errors.password ? errors.password.message : ''}
-              icon={<LockIcon sx={{ color: 'icon.blue', height: 20, wight: 20, marginRight: 1 }} />}
+              icon={
+                <LockIcon sx={{ color: 'primary.main', height: 20, wight: 20, marginRight: 1 }} />
+              }
             />
           )}
         />
@@ -124,7 +126,7 @@ const SignIn = () => {
           }}
         >
           サインアップ
-          <ArrowForwardIcon sx={{ color: 'icon.blue', height: 16, wight: 16 }} />
+          <ArrowForwardIcon sx={{ color: 'primary.main', height: 16, wight: 16 }} />
         </Button>
       </Box>
     </RegistrationFormBox>
