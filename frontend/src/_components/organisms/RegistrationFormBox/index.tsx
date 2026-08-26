@@ -21,7 +21,7 @@ const RegistrationFormBox = ({
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'gray.background',
+      backgroundColor: 'background.default',
       width: '100vw',
       height: '100vh',
     }}
@@ -34,7 +34,7 @@ const RegistrationFormBox = ({
         },
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'brand.white',
+        backgroundColor: 'background.paper',
         p: {
           xs: 3,
           sm: 6,
@@ -55,7 +55,7 @@ const RegistrationFormBox = ({
           marginBottom: 1,
           fontWeight: 'bold',
         }}
-        color="gray.text"
+        color="text.primary"
       >
         Task Canvas
       </Typography>
@@ -67,7 +67,7 @@ const RegistrationFormBox = ({
           textAlign: 'center',
           opacity: 0.4,
         }}
-        color="gray.text"
+        color="text.primary"
       >
         {description}
       </Typography>
@@ -81,10 +81,10 @@ const RegistrationFormBox = ({
             justifyContent: 'center',
           }}
         >
-          <InfoIcon sx={{ height: 18, width: 18, mr: 2, color: 'brand.error' }} />
+          <InfoIcon sx={{ height: 18, width: 18, mr: 2, color: 'error.main' }} />
           <Typography
             sx={{ fontSize: 14 }}
-            color="brand.error"
+            color="error.main"
             component="span"
           >
             {errorMessage}
