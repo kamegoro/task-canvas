@@ -35,7 +35,8 @@ const Top = () => {
   const [debugLog, setDebugLog] = useState<string[]>([]);
   const pushDebug = (msg: string) => setDebugLog((prev) => [...prev, msg].slice(-20));
 
-  const handleCloseEditDialog = () => {
+  const handleCloseEditDialog = (_event?: unknown, reason?: string) => {
+    pushDebug(`close-dialog reason=${reason ?? 'manual'}`);
     setEditingTodoId(null);
   };
 
@@ -237,8 +238,8 @@ const Top = () => {
           zIndex: 9999,
         }}
       >
-        {debugLog.map((line, i) => (
-          <div key={i}>{line}</div>
+        {debugLog.map((line) => (
+          <div key={line}>{line}</div>
         ))}
       </div>
     </Box>
