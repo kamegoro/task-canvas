@@ -41,6 +41,7 @@ const Top = () => {
   };
 
   const handleSaveEdit = async (id: string, value: string) => {
+    pushDebug(`handleSaveEdit called id=${id} value=${value}`);
     const target = todos.find((todo) => todo.id === id);
     try {
       await updateTodo(id, value, target?.completed ?? false);
@@ -52,6 +53,7 @@ const Top = () => {
   };
 
   const handleDeleteEdit = async (id: string) => {
+    pushDebug(`handleDeleteEdit called id=${id}`);
     try {
       await deleteTodo(id);
       handleCloseEditDialog();
