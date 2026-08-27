@@ -32,6 +32,11 @@ const Top = () => {
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
   const editingTodo = todos.find((todo) => todo.id === editingTodoId) ?? null;
+  console.log('[DEBUG render]', {
+    editingTodoId,
+    editingTodoFound: !!editingTodo,
+    todoIds: todos.map((t) => t.id),
+  });
 
   const handleCloseEditDialog = () => {
     setEditingTodoId(null);
@@ -199,7 +204,10 @@ const Top = () => {
                 onChange={(event) => {
                   handleChangeCheckbox(todo.id, todo.content, event);
                 }}
-                onEditClick={() => setEditingTodoId(todo.id)}
+                onEditClick={() => {
+                  console.log('[DEBUG onEditClick]', todo.id);
+                  setEditingTodoId(todo.id);
+                }}
               />
             </Box>
           );
