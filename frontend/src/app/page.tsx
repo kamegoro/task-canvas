@@ -1,10 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 
 import Button from '@/_components/atoms/Button';
 import Input from '@/_components/atoms/Input';
 import { useSnackbar } from '@/_components/contexts/SnackbarContext';
+import EditPage from '@/_components/molecules/EditPage';
 import ThemeModeToggle from '@/_components/molecules/ThemeModeToggle';
 import Title from '@/_components/molecules/Title';
 import TodoCard from '@/_components/molecules/TodoCard';
@@ -19,13 +22,41 @@ type TodoFormProps = {
 };
 
 const Top = () => {
-  const { todos, progress, addTodo, updateTodo } = useTodo();
+  const { todos, progress, addTodo, updateTodo, deleteTodo } = useTodo();
   const { showError } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<TodoFormProps>({
     defaultValues: {
       content: '',
     },
   });
+  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+
+  const editingTodo = todos.find((todo) => todo.id === editingTodoId) ?? null;
+
+  const handleCloseEditDialog = () => {
+    setEditingTodoId(null);
+  };
+
+  const handleSaveEdit = async (id: string, value: string) => {
+    const target = todos.find((todo) => todo.id === id);
+    try {
+      await updateTodo(id, value, target?.completed ?? false);
+      handleCloseEditDialog();
+    } catch (error) {
+      showError('タスクの更新に失敗しました');
+      console.error(error);
+    }
+  };
+
+  const handleDeleteEdit = async (id: string) => {
+    try {
+      await deleteTodo(id);
+      handleCloseEditDialog();
+    } catch (error) {
+      showError('タスクの削除に失敗しました');
+      console.error(error);
+    }
+  };
 
   const createTodo: SubmitHandler<TodoFormProps> = async (todoForm) => {
     try {
@@ -168,11 +199,23 @@ const Top = () => {
                 onChange={(event) => {
                   handleChangeCheckbox(todo.id, todo.content, event);
                 }}
+                onEditClick={() => setEditingTodoId(todo.id)}
               />
             </Box>
           );
         })}
       </Box>
+      {editingTodo && (
+        <EditPage
+          key={editingTodo.id}
+          id={editingTodo.id}
+          open={true}
+          initialValue={editingTodo.content}
+          onClose={handleCloseEditDialog}
+          onSave={handleSaveEdit}
+          onDelete={handleDeleteEdit}
+        />
+      )}
     </Box>
   );
 };

@@ -59,3 +59,45 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ slug: s
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(_req: NextRequest, context: { params: Promise<{ slug: string }> }) {
+  try {
+    const { slug } = await context.params;
+    const id = slug;
+    const cookieStore = await cookies();
+
+    const currentToken = cookieStore.get('token');
+
+    if (currentToken === undefined) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const response = await fetch(`${BASE_URL}/v1/todos/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: currentToken.value,
+      },
+      mode: 'cors',
+    });
+
+    if (!response.ok) {
+      return NextResponse.json({ message: 'Failed to delete todo' }, { status: response.status });
+    }
+
+    const token = response.headers.get('Authorization');
+    if (!token) {
+      return NextResponse.json({ message: 'Failed to delete todo' }, { status: 400 });
+    }
+
+    cookieStore.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    return NextResponse.json(null, { status: 200 });
+  } catch (error) {
+    console.error('Fetch request failed:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
+}

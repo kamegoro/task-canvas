@@ -31,6 +31,7 @@ export const Default: StoryFn<typeof TodoCard> = () => {
         text={'test'}
         checked={isChecked}
         onChange={handleChange}
+        onEditClick={() => console.log('edit clicked')}
       />
     </div>
   );
