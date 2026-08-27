@@ -32,11 +32,8 @@ const Top = () => {
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
   const editingTodo = todos.find((todo) => todo.id === editingTodoId) ?? null;
-  console.log('[DEBUG render]', {
-    editingTodoId,
-    editingTodoFound: !!editingTodo,
-    todoIds: todos.map((t) => t.id),
-  });
+  const [debugLog, setDebugLog] = useState<string[]>([]);
+  const pushDebug = (msg: string) => setDebugLog((prev) => [...prev, msg].slice(-20));
 
   const handleCloseEditDialog = () => {
     setEditingTodoId(null);
@@ -202,10 +199,11 @@ const Top = () => {
                 text={todo.content}
                 checked={todo.completed}
                 onChange={(event) => {
+                  pushDebug(`checkbox-change id=${todo.id} checked=${event.target.checked}`);
                   handleChangeCheckbox(todo.id, todo.content, event);
                 }}
                 onEditClick={() => {
-                  console.log('[DEBUG onEditClick]', todo.id);
+                  pushDebug(`edit-click id=${todo.id}`);
                   setEditingTodoId(todo.id);
                 }}
               />
@@ -224,6 +222,25 @@ const Top = () => {
           onDelete={handleDeleteEdit}
         />
       )}
+      <div
+        id="debug-info"
+        data-editing-todo-id={editingTodoId ?? 'null'}
+        data-editing-todo-found={String(!!editingTodo)}
+        data-todo-ids={todos.map((t) => t.id).join(',')}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          fontSize: 1,
+          opacity: 0.01,
+          pointerEvents: 'none',
+          zIndex: 9999,
+        }}
+      >
+        {debugLog.map((line, i) => (
+          <div key={i}>{line}</div>
+        ))}
+      </div>
     </Box>
   );
 };
