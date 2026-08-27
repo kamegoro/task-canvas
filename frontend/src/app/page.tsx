@@ -32,12 +32,17 @@ const Top = () => {
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
   const editingTodo = todos.find((todo) => todo.id === editingTodoId) ?? null;
+  const [debugLog, setDebugLog] = useState<string[]>([]);
+  const pushDebug = (msg: string) =>
+    setDebugLog((prev) => [...prev, `${Date.now()} ${msg}`].slice(-30));
 
-  const handleCloseEditDialog = () => {
+  const handleCloseEditDialog = (_event?: unknown, reason?: string) => {
+    pushDebug(`close-dialog reason=${reason ?? 'manual'}`);
     setEditingTodoId(null);
   };
 
   const handleSaveEdit = async (id: string, value: string) => {
+    pushDebug(`handleSaveEdit called id=${id} value=${value}`);
     const target = todos.find((todo) => todo.id === id);
     try {
       await updateTodo(id, value, target?.completed ?? false);
@@ -49,6 +54,7 @@ const Top = () => {
   };
 
   const handleDeleteEdit = async (id: string) => {
+    pushDebug(`handleDeleteEdit called id=${id}`);
     try {
       await deleteTodo(id);
       handleCloseEditDialog();
@@ -197,9 +203,15 @@ const Top = () => {
                 text={todo.content}
                 checked={todo.completed}
                 onChange={(event) => {
+                  pushDebug(`checkbox-change id=${todo.id} checked=${event.target.checked}`);
                   handleChangeCheckbox(todo.id, todo.content, event);
                 }}
-                onEditClick={() => setEditingTodoId(todo.id)}
+                onEditClick={() => {
+                  pushDebug(
+                    `edit-click id=${todo.id} todosSnapshot=${todos.map((t) => t.id).join('|')}`,
+                  );
+                  setEditingTodoId(todo.id);
+                }}
               />
             </Box>
           );
@@ -216,6 +228,25 @@ const Top = () => {
           onDelete={handleDeleteEdit}
         />
       )}
+      <div
+        id="debug-info"
+        data-editing-todo-id={editingTodoId ?? 'null'}
+        data-editing-todo-found={String(!!editingTodo)}
+        data-todo-ids={todos.map((t) => t.id).join(',')}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          fontSize: 1,
+          opacity: 0.01,
+          pointerEvents: 'none',
+          zIndex: 9999,
+        }}
+      >
+        {debugLog.map((line) => (
+          <div key={line}>{line}</div>
+        ))}
+      </div>
     </Box>
   );
 };
