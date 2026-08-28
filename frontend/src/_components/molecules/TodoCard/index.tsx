@@ -11,9 +11,10 @@ export type TodoCardProps = {
   text: string;
   checked: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  onEditClick: () => void;
 };
 
-const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
+const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text, onEditClick }) => {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   const visibleEditIcon: React.MouseEventHandler<HTMLDivElement> = () => {
@@ -31,21 +32,16 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        '&:hover': {
-          bgcolor: 'White',
-        },
+        gap: '12px',
+        padding: '14px 0',
+        borderBottom: '1px solid',
+        borderColor: 'tokens.dividerFaint',
       }}
       aria-label="todo-card"
     >
       <Checkbox
         checked={checked}
         onChange={onChange}
-        sx={{
-          '.MuiSvgIcon-root': {
-            fontSize: 32,
-          },
-        }}
       />
       <Box
         sx={{
@@ -53,12 +49,17 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           width: '100%',
+          minWidth: 0,
         }}
       >
         <Typography
           sx={{
-            fontSize: '24px',
-            marginLeft: '12px',
+            fontSize: '16px',
+            color: checked ? 'tokens.textFaded' : 'text.primary',
+            textDecoration: checked ? 'line-through' : 'none',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}
         >
           {text}
@@ -66,11 +67,11 @@ const TodoCard: React.FC<TodoCardProps> = ({ checked, onChange, text }) => {
         {isHover && (
           <IconButton
             aria-label="todo-edit"
-            sx={{
-              marginRight: '12px',
-            }}
+            onClick={onEditClick}
+            size="small"
+            sx={{ color: 'text.secondary', flexShrink: 0 }}
           >
-            <EditIcon />
+            <EditIcon sx={{ fontSize: 18 }} />
           </IconButton>
         )}
       </Box>

@@ -1,6 +1,6 @@
 import type React from 'react';
 
-import { CalendarMonth as MuiCalendarMonth } from '@mui/icons-material';
+import { CalendarMonthOutlined as MuiCalendarMonth } from '@mui/icons-material';
 
 export type CalendarMonthProps = React.ComponentProps<typeof MuiCalendarMonth>;
 
