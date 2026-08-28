@@ -22,6 +22,7 @@ type TodoFormProps = {
 };
 
 const Top = () => {
+  'use no memo';
   const { todos, progress, addTodo, updateTodo, deleteTodo } = useTodo();
   const { showError } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<TodoFormProps>({
