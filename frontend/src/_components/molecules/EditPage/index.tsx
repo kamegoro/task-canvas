@@ -37,6 +37,7 @@ const EditPage: React.FC<EditPageProps> = ({
     >
       <Box>
         <TextFiled
+          name="edit-content"
           variant="outlined"
           value={value}
           onChange={handleChangeText}
