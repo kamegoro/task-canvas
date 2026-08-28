@@ -1,14 +1,21 @@
 'use client';
 
-import { ThemeProvider } from '@mui/material';
+import { Manrope } from 'next/font/google';
 
 import { SnackbarProvider } from '@/_components/contexts/SnackbarContext';
+import { ThemeModeProvider } from '@/_components/contexts/ThemeModeContext';
 import { UserProvider } from '@/_components/contexts/UserContext';
 import Box from '@/_components/mui/Box';
 import AppHeader from '@/_components/organisms/AppHeader';
 import DiProvider from '@/context/DIContext';
 import QueryProvider from '@/context/QueryContext';
-import theme from '@/styles/theme';
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
 
 export default function RootLayout({
   children,
@@ -16,9 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body style={{ margin: 0 }}>
-        <ThemeProvider theme={theme}>
+    <html
+      lang="ja"
+      className={manrope.variable}
+    >
+      <body style={{ margin: 0, fontFamily: 'var(--font-manrope), sans-serif' }}>
+        <ThemeModeProvider>
           <QueryProvider>
             <DiProvider>
               <UserProvider>
@@ -26,10 +36,10 @@ export default function RootLayout({
                   <AppHeader />
                   <Box
                     sx={{
-                      width: '100vw',
+                      width: '100%',
+                      minHeight: '100vh',
                       display: 'flex',
                       justifyContent: 'center',
-                      alignItems: 'center',
                     }}
                     suppressContentEditableWarning
                   >
@@ -39,7 +49,7 @@ export default function RootLayout({
               </UserProvider>
             </DiProvider>
           </QueryProvider>
-        </ThemeProvider>
+        </ThemeModeProvider>
       </body>
     </html>
   );

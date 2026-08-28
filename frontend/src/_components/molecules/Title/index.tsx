@@ -1,7 +1,5 @@
 import type React from 'react';
 
-import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
-
 import Box from '@/_components/mui/Box';
 import Link, { type LinkProps } from '@/_components/mui/Link';
 import Typography from '@/_components/mui/Typography';
@@ -12,31 +10,50 @@ const Title: React.FC<TitleProps> = ({ sx, href }) => {
   return (
     <Link
       href={href}
+      underline="none"
       sx={sx}
     >
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: 'column',
+          gap: '6px',
         }}
       >
-        <CheckBoxIcon
-          sx={{
-            color: '#4169e1',
-            fontSize: '60px',
-            marginRight: '6px',
-          }}
-        />
         <Typography
-          component={'h1'}
+          component="span"
           sx={{
-            fontSize: '44px',
-            color: '#4169e1',
-            textDecoration: 'underline',
-            textDecorationColor: '#4169e1',
+            fontSize: '12px',
+            fontWeight: 700,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'text.secondary',
           }}
         >
-          My Todo-s
+          Task Manager
+        </Typography>
+        <Typography
+          component="h1"
+          sx={{
+            fontSize: { xs: '32px', sm: '40px' },
+            fontWeight: 800,
+            lineHeight: 1.15,
+            color: 'text.primary',
+            margin: 0,
+          }}
+        >
+          Task Canvas
+        </Typography>
+        <Typography
+          component="p"
+          sx={{
+            fontSize: '15px',
+            fontWeight: 500,
+            color: 'text.secondary',
+            margin: 0,
+          }}
+        >
+          今日のタスクを整理しましょう
         </Typography>
       </Box>
     </Link>

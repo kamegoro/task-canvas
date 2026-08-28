@@ -6,6 +6,7 @@ import { RegisterTodoGateway } from '@/gateway/registerTodoGateway';
 import { SignOutGateway } from '@/gateway/signOutGateway';
 import TodoGateway from '@/gateway/todo';
 import { UserGateway } from '@/gateway/userGateway';
+import { DeleteTodoUseCase } from '@/useCase/deleteTodoUseCase';
 import { GetTodosUseCase } from '@/useCase/getTodosUseCase';
 import { GetUserUseCase } from '@/useCase/getUserUseCase';
 import { SignInUseCase } from '@/useCase/signInUseCase';
@@ -21,6 +22,7 @@ type DIContainer = {
   getTodosUseCase: GetTodosUseCase;
   storeTodoUseCase: StoreTodoUseCase;
   updateTodoUseCase: UpdateTodoUseCase;
+  deleteTodoUseCase: DeleteTodoUseCase;
   getUserUseCase: GetUserUseCase;
 };
 
@@ -50,6 +52,7 @@ const DiProvider = ({ children }: { children: React.ReactNode }) => {
     const getTodosUseCase = new GetTodosUseCase(todoGateway);
     const storeTodoUseCase = new StoreTodoUseCase(registerTodoGateway);
     const updateTodoUseCase = new UpdateTodoUseCase(todoGateway);
+    const deleteTodoUseCase = new DeleteTodoUseCase(todoGateway);
     const getUserUseCase = new GetUserUseCase(userGateway);
 
     return {
@@ -59,6 +62,7 @@ const DiProvider = ({ children }: { children: React.ReactNode }) => {
       getTodosUseCase,
       storeTodoUseCase,
       updateTodoUseCase,
+      deleteTodoUseCase,
       getUserUseCase,
     };
   }, []);

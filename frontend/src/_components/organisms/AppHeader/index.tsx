@@ -36,7 +36,10 @@ const AppHeader: React.FC = () => {
       position="static"
       sx={{
         width: '100%',
-        backgroundColor: '#fafafa',
+        backgroundColor: 'background.default',
+        boxShadow: 'none',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
       }}
     >
       <Box
@@ -58,7 +61,7 @@ const AppHeader: React.FC = () => {
         >
           <MenuIcon
             aria-label="hamburger-menu"
-            sx={{ color: 'black', height: 32, width: 32 }}
+            sx={{ color: 'text.primary', height: 32, width: 32 }}
           />
         </IconButton>
         <Menu
