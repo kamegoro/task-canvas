@@ -42,7 +42,7 @@ jobs:
           author=$(jq -r '.author.login' <<<"$pr_json")
           state=$(jq -r '.state' <<<"$pr_json")
 
-          if [ "$author" != "dependabot[bot]" ] || [ "$state" != "OPEN" ]; then
+          if [ "$author" != "app/dependabot" ] || [ "$state" != "OPEN" ]; then
             echo "PR #$PR_NUMBER is not an open Dependabot PR, skipping."
             exit 0
           fi
