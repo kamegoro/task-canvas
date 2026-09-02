@@ -40,7 +40,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.9.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          running-workflow-name: 'Dependabot Auto-merge'
+          running-workflow-name: 'auto-merge'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 15
 
