@@ -76,6 +76,8 @@ jobs:
 
       - name: Start minikube
         uses: medyagh/setup-minikube@v0.0.21
+        with:
+          container-runtime: docker
 
       - name: Skaffold Build
         run: |
