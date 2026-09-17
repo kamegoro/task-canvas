@@ -6,6 +6,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - ".github/workflows/ci-backend-e2e.yaml"
+      - ".github/workflows/ci-e2e-reusable.yaml"
       - ".sdkmanrc"
       - "backend/**"
 
@@ -17,139 +18,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  run-backend-e2e:
-    name: backend-e2e
-
-    timeout-minutes: 15
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout task-canvas
-        uses: actions/checkout@v7
-        with:
-          path: task-canvas
-
-      - name: Checkout k8s-infrastructure
-        uses: actions/checkout@v7
-        with:
-          repository: kamegoro/k8s-infrastructure
-          path: k8s-infrastructure
-
-      - name: Checkout task-canvas-e2e
-        uses: actions/checkout@v7
-        with:
-          repository: kamegoro/task-canvas-e2e
-          path: task-canvas-e2e
-
-      - name: Set up mise
-        uses: jdx/mise-action@v3
-
-      - name: Install k8s-infrastructure tools
-        run: |
-          cd k8s-infrastructure
-          mise install
-          mise ls
-
-      - name: Install task-canvas-e2e tools
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          cd task-canvas-e2e
-
-          sdk env install
-
-          mise plugins add gauge https://github.com/yysushi/asdf-gauge.git
-          mise install
-          mise ls
-
-          echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> $GITHUB_ENV
-          echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
-
-      - name: Start minikube
-        uses: medyagh/setup-minikube@v0.0.21
-
-      - name: Skaffold Build
-        run: |
-          cd k8s-infrastructure
-          skaffold build -p task-canvas-api-e2e --namespace ci-e2e
-
-      - name: Deploy and check pods in CI namespace
-        run: |
-          cd k8s-infrastructure
-
-          kubectl create namespace ci-e2e || echo "Namespace ci-e2e already exists"
-
-          nohup skaffold dev -p task-canvas-api-e2e --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
-
-          max_attempts=20
-          attempt=1
-          ready=false
-          while [ $attempt -le $max_attempts ]; do
-            echo "Attempt $attempt of $max_attempts: Checking pod statuses in ci-e2e namespace..."
-
-            all_pods=$(kubectl get pods -n ci-e2e --no-headers)
-
-            if [ -z "$all_pods" ]; then
-              echo "No pods found in ci-e2e namespace, waiting..."
-              sleep 5
-              attempt=$((attempt+1))
-              continue
-            fi
-
-            echo "All pods:"
-            echo "$all_pods"
-
-            filtered_pods=$(echo "$all_pods" | grep -v "db-connection-test")
-            echo "Filtered pods (excluding db-connection-test):"
-            echo "$filtered_pods"
-
-            if [ -z "$filtered_pods" ]; then
-              echo "Only db-connection-test pods found. Assuming these are not critical. Proceeding."
-              ready=true
-              break
-            fi
-
-            not_ready=$(echo "$filtered_pods" | awk '{print $3}' | grep -vE "^(Running|Completed)$" | wc -l)
-            if [ "$not_ready" -eq 0 ]; then
-              echo "All non-db-connection-test pods are Running or Completed."
-              ready=true
-              break
-            fi
-
-            echo "Not all pods are ready, waiting..."
-            sleep 5
-            attempt=$((attempt+1))
-          done
-
-          if [ "$ready" != "true" ]; then
-            echo "Pods did not become ready in time, exiting."
-            exit 1
-          fi
-
-          kubectl get pods -n ci-e2e
-
-      - name: Run E2E API Tests
-        id: run-e2e-api-tests
-        run: |
-          cd task-canvas-e2e
-
-          mvn -B -q clean test-compile
-          mvn gauge:execute -DspecsDir=specs/task-canvas/
-
-      - name: Upload E2E Test Artifacts
-        if: failure() && steps.run-e2e-api-tests.outcome == 'failure'
-        uses: actions/upload-artifact@v7
-        with:
-          name: e2e-test-artifacts
-          path: task-canvas-e2e/build/reports/tests/
-
-      - name: Show Pod Logs
-        if: failure() && steps.run-e2e-api-tests.outcome == 'failure'
-        run: |
-          cd k8s-infrastructure
-
-          kubectl get pods -n ci-e2e
-
-          kubectl logs -n ci-e2e -l app=task-canvas-api
-          kubectl logs -n ci-e2e -l app=task-canvas-db
+  backend-e2e:
+    uses: ./.github/workflows/ci-e2e-reusable.yaml
+    with:
+      skaffold-profile: task-canvas-api-e2e
+      specs-dir: specs/task-canvas/
+      pod-log-selectors: "app=task-canvas-api,app=task-canvas-db"
+      pod-exclude-pattern: db-connection-test

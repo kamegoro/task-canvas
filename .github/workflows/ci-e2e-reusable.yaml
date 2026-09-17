@@ -1,0 +1,186 @@
+name: "CI E2E (reusable)"
+
+on:
+  workflow_call:
+    inputs:
+      skaffold-profile:
+        required: true
+        type: string
+      specs-dir:
+        required: true
+        type: string
+      pod-log-selectors:
+        required: true
+        type: string
+      pod-exclude-pattern:
+        required: false
+        type: string
+        default: ""
+      extra-checkout-repo:
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: "read"
+
+jobs:
+  run-e2e:
+    timeout-minutes: 15
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout task-canvas
+        uses: actions/checkout@v7
+        with:
+          path: task-canvas
+
+      - name: Checkout k8s-infrastructure
+        uses: actions/checkout@v7
+        with:
+          repository: kamegoro/k8s-infrastructure
+          path: k8s-infrastructure
+
+      - name: Checkout extra repo
+        if: inputs.extra-checkout-repo != ''
+        uses: actions/checkout@v7
+        with:
+          repository: kamegoro/${{ inputs.extra-checkout-repo }}
+          path: ${{ inputs.extra-checkout-repo }}
+
+      - name: Checkout task-canvas-e2e
+        uses: actions/checkout@v7
+        with:
+          repository: kamegoro/task-canvas-e2e
+          path: task-canvas-e2e
+
+      - name: Set up mise
+        uses: jdx/mise-action@v3
+
+      - name: Install k8s-infrastructure tools
+        run: |
+          cd k8s-infrastructure
+          mise install
+          mise ls
+
+      - name: Install task-canvas-e2e tools
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          cd task-canvas-e2e
+
+          sdk env install
+
+          mise plugins add gauge https://github.com/yysushi/asdf-gauge.git
+          mise install
+          mise ls
+
+          echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> $GITHUB_ENV
+          echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
+
+      - name: Start minikube
+        uses: medyagh/setup-minikube@v0.0.21
+        with:
+          container-runtime: docker
+
+      - name: Skaffold Build
+        env:
+          SKAFFOLD_PROFILE: ${{ inputs.skaffold-profile }}
+        run: |
+          cd k8s-infrastructure
+          skaffold build -p "$SKAFFOLD_PROFILE" --namespace ci-e2e
+
+      - name: Deploy and check pods in CI namespace
+        env:
+          SKAFFOLD_PROFILE: ${{ inputs.skaffold-profile }}
+          EXCLUDE_PATTERN: ${{ inputs.pod-exclude-pattern }}
+        run: |
+          cd k8s-infrastructure
+
+          kubectl create namespace ci-e2e || echo "Namespace ci-e2e already exists"
+
+          nohup skaffold dev -p "$SKAFFOLD_PROFILE" --namespace ci-e2e --port-forward > skaffold.log 2>&1 &
+
+          max_attempts=20
+          attempt=1
+          ready=false
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts: Checking pod statuses in ci-e2e namespace..."
+
+            all_pods=$(kubectl get pods -n ci-e2e --no-headers)
+
+            if [ -z "$all_pods" ]; then
+              echo "No pods found in ci-e2e namespace, waiting..."
+              sleep 5
+              attempt=$((attempt+1))
+              continue
+            fi
+
+            echo "All pods:"
+            echo "$all_pods"
+
+            if [ -n "$EXCLUDE_PATTERN" ]; then
+              filtered_pods=$(echo "$all_pods" | grep -v "$EXCLUDE_PATTERN" || true)
+              echo "Filtered pods (excluding $EXCLUDE_PATTERN):"
+              echo "$filtered_pods"
+            else
+              filtered_pods="$all_pods"
+            fi
+
+            if [ -z "$filtered_pods" ]; then
+              echo "Only excluded pods found. Assuming these are not critical. Proceeding."
+              ready=true
+              break
+            fi
+
+            not_ready=$(echo "$filtered_pods" | awk '{print $3}' | grep -vE "^(Running|Completed)$" | wc -l)
+            if [ "$not_ready" -eq 0 ]; then
+              echo "All pods are Running or Completed."
+              ready=true
+              break
+            fi
+
+            echo "Not all pods are ready, waiting..."
+            sleep 5
+            attempt=$((attempt+1))
+          done
+
+          if [ "$ready" != "true" ]; then
+            echo "Pods did not become ready in time, exiting."
+            exit 1
+          fi
+
+          kubectl get pods -n ci-e2e
+
+      - name: Run E2E Tests
+        id: run-e2e-tests
+        env:
+          SPECS_DIR: ${{ inputs.specs-dir }}
+        run: |
+          cd task-canvas-e2e
+
+          mvn -B -q clean test-compile
+          mvn gauge:execute -DspecsDir="$SPECS_DIR"
+
+      - name: Upload E2E Test Artifacts
+        if: failure() && steps.run-e2e-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-test-artifacts
+          path: task-canvas-e2e/build/reports/tests/
+
+      - name: Show Pod Logs
+        if: failure() && steps.run-e2e-tests.outcome == 'failure'
+        env:
+          POD_LOG_SELECTORS: ${{ inputs.pod-log-selectors }}
+        run: |
+          cd k8s-infrastructure
+
+          kubectl get pods -n ci-e2e
+
+          IFS=',' read -ra selectors <<< "$POD_LOG_SELECTORS"
+          for selector in "${selectors[@]}"; do
+            echo "--- logs for -l $selector ---"
+            kubectl logs -n ci-e2e -l "$selector"
+          done
