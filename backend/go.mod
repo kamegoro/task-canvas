@@ -8,7 +8,7 @@ require (
 )
 
 require (
-	github.com/agiledragon/gomonkey/v2 v2.14.2
+	github.com/agiledragon/gomonkey/v2 v2.14.3
 	github.com/go-playground/validator/v10 v10.30.4
 )
 
