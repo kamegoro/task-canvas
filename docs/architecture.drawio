@@ -1,0 +1,105 @@
+<mxfile host="app.diagrams.net" version="24.0.0">
+  <diagram name="task-canvas システム構成" id="task-canvas-arch">
+    <mxGraphModel dx="1100" dy="1080" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="task-canvas システム構成" style="text;html=1;fontSize=22;fontStyle=1;align=left;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="50" y="16" width="500" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="ローカル開発 / CI E2E 環境(kamegoro/k8s-infrastructure)。本番はAWS(kamegoro/aws-infrastructure、ECS Fargate + RDS)上で別途稼働。" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;fontColor=#64748B;" vertex="1" parent="1">
+          <mxGeometry x="50" y="48" width="900" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="browser" value="ブラウザ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="110" width="180" height="54" as="geometry" />
+        </mxCell>
+
+        <mxCell id="k8s" value="Kubernetes Cluster" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#326CE5;strokeWidth=2;dashed=1;verticalAlign=top;align=left;spacingLeft=14;spacingTop=10;fontColor=#326CE5;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="180" y="220" width="740" height="560" as="geometry" />
+        </mxCell>
+
+        <mxCell id="webpod" value="task-canvas-web&#10;Next.js :3000" style="aspect=fixed;sketch=0;html=1;dashed=0;whiteSpace=nowrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;prIcon=deploy;fontSize=12;" vertex="1" parent="k8s">
+          <mxGeometry x="140" y="60" width="70" height="68" as="geometry" />
+        </mxCell>
+
+        <mxCell id="progresspod" value="task-canvas-progress&lt;br&gt;&lt;font color=&quot;#B45309&quot;&gt;&lt;b&gt;マイクロフロントエンド&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Lit + Nginx :11000" style="aspect=fixed;sketch=0;html=1;dashed=0;whiteSpace=nowrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;prIcon=deploy;fontSize=12;" vertex="1" parent="k8s">
+          <mxGeometry x="520" y="60" width="70" height="68" as="geometry" />
+        </mxCell>
+
+        <mxCell id="apipod" value="task-canvas-api&#10;Go / Echo :8080" style="aspect=fixed;sketch=0;html=1;dashed=0;whiteSpace=nowrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;prIcon=deploy;fontSize=12;" vertex="1" parent="k8s">
+          <mxGeometry x="140" y="270" width="70" height="68" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dbpod" value="task-canvas-db&#10;PostgreSQL :10080" style="aspect=fixed;sketch=0;html=1;dashed=0;whiteSpace=nowrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;prIcon=deploy;fontSize=12;" vertex="1" parent="k8s">
+          <mxGeometry x="140" y="430" width="70" height="68" as="geometry" />
+        </mxCell>
+
+        <!-- Planned / not-yet-wired services -->
+        <mxCell id="tagmanager" value="&lt;b&gt;task-canvas-tag-manager&lt;/b&gt;&lt;br&gt;F# / :9090&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;tag CRUD API(実装済・未配線)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#94A3B8;dashed=1;fontSize=13;spacing=6;fontColor=#64748B;" vertex="1" parent="1">
+          <mxGeometry x="180" y="830" width="320" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="profile" value="&lt;b&gt;task-canvas-profile&lt;/b&gt;&lt;br&gt;Java / Wicket&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;プロフィール画面(stale, 2024-11〜)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#94A3B8;dashed=1;fontSize=13;spacing=6;fontColor=#64748B;" vertex="1" parent="1">
+          <mxGeometry x="540" y="830" width="300" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ============ Edges ============ -->
+        <mxCell id="e-browser-web" value="GET / (SSR)&#10;fetch /api/v1/*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;strokeColor=#333333;strokeWidth=2;fontColor=#333333;labelBackgroundColor=#ffffff;exitX=0.3;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="browser" target="webpod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-browser-progress" value="直接 &amp;lt;script&amp;gt; 読み込み&#10;(BFFを経由しない)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;strokeColor=#B45309;strokeWidth=2;fontColor=#B45309;labelBackgroundColor=#ffffff;exitX=0.75;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="browser" target="progresspod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-web-api" value="REST /v1/* (todos/users/signIn・signUp/verifyAuth)&#10;JWT (httpOnly cookie)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;strokeColor=#333333;strokeWidth=2;fontColor=#333333;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="webpod" target="apipod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-api-db" value="pgx (Postgres protocol)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;strokeColor=#333333;strokeWidth=2;fontColor=#333333;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="apipod" target="dbpod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-tagmanager-db" value="(未接続)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;strokeColor=#94A3B8;strokeWidth=2;dashed=1;fontColor=#94A3B8;labelBackgroundColor=#ffffff;exitX=0.3;exitY=0;entryX=0.25;entryY=1;" edge="1" parent="1" source="tagmanager" target="dbpod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-profile-db" value="(未接続)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=11;strokeColor=#94A3B8;strokeWidth=2;dashed=1;fontColor=#94A3B8;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.75;entryY=1;" edge="1" parent="1" source="profile" target="dbpod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ Legend ============ -->
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#CCCCCC;" vertex="1" parent="1">
+          <mxGeometry x="180" y="940" width="460" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="凡例" style="text;html=1;fontSize=12;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="192" y="946" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1-line" style="html=1;strokeColor=#333333;strokeWidth=2;endArrow=block;" edge="1" parent="1">
+          <mxGeometry x="200" y="974" width="1" height="1" relative="1" as="geometry">
+            <mxPoint x="200" y="974" as="sourcePoint" />
+            <mxPoint x="240" y="974" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend1-text" value="実際に接続済み" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+          <mxGeometry x="248" y="964" width="140" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2-line" style="html=1;strokeColor=#B45309;strokeWidth=2;endArrow=block;" edge="1" parent="1">
+          <mxGeometry x="200" y="998" width="1" height="1" relative="1" as="geometry">
+            <mxPoint x="200" y="998" as="sourcePoint" />
+            <mxPoint x="240" y="998" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend2-text" value="通常経路(BFF)を経由しないマイクロフロントエンドの直接接続" style="text;html=1;fontSize=11;align=left;fontColor=#B45309;" vertex="1" parent="1">
+          <mxGeometry x="248" y="988" width="380" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3-line" style="html=1;strokeColor=#94A3B8;strokeWidth=2;dashed=1;endArrow=block;" edge="1" parent="1">
+          <mxGeometry x="200" y="1022" width="1" height="1" relative="1" as="geometry">
+            <mxPoint x="200" y="1022" as="sourcePoint" />
+            <mxPoint x="240" y="1022" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend3-text" value="設計上の接続のみ・未配線(開発中コンポーネント)" style="text;html=1;fontSize=11;align=left;fontColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="248" y="1012" width="300" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
