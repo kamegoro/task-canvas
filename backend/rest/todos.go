@@ -10,7 +10,7 @@ import (
 	"task-canvas/useCase"
 
 	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type Todo struct {
@@ -42,7 +42,7 @@ type DeleteTodoRequest struct {
 	Id string `param:"id" validate:"required"`
 }
 
-func GetTodos(c echo.Context) error {
+func GetTodos(c *echo.Context) error {
 	todoDriver := db_driver.NewQuerier(config.PgPool)
 	todoGateway := gateway.NewTodoGateway(todoDriver)
 	todoUseCase := useCase.NewGetTodoUseCase(todoGateway)
@@ -76,7 +76,7 @@ func GetTodos(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func PostTodos(c echo.Context) error {
+func PostTodos(c *echo.Context) error {
 	reqTodo := new(PostTodosRequest)
 
 	if err := c.Bind(reqTodo); err != nil {
@@ -114,7 +114,7 @@ func PostTodos(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func PutTodo(c echo.Context) error {
+func PutTodo(c *echo.Context) error {
 	reqTodo := new(PutTodoRequest)
 
 	if err := c.Bind(reqTodo); err != nil {
@@ -156,7 +156,7 @@ func PutTodo(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
-func DeleteTodo(c echo.Context) error {
+func DeleteTodo(c *echo.Context) error {
 	reqTodo := new(DeleteTodoRequest)
 
 	if err := c.Bind(reqTodo); err != nil {

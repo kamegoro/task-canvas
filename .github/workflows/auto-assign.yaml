@@ -4,12 +4,17 @@ on:
   pull_request:
     types: [opened]
 
+permissions:
+  contents: read
+
 jobs:
   assign:
     if: github.actor != 'renovate'
 
     name: Assign author to PR
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Assign author to PR
         uses: technote-space/assign-author@v1

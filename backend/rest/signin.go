@@ -9,7 +9,7 @@ import (
 	"task-canvas/logger"
 	"task-canvas/useCase"
 
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type PostSignInRequest struct {
@@ -17,7 +17,7 @@ type PostSignInRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
-func PostSignIn(ctx echo.Context) error {
+func PostSignIn(ctx *echo.Context) error {
 	req := new(PostSignInRequest)
 	if err := ctx.Bind(req); err != nil {
 		logger.Logger.Error("Failed to bind request", "error", err.Error())

@@ -2,14 +2,15 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"task-canvas/logger"
 	"task-canvas/middleware"
 	"task-canvas/rest"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
-	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v5"
+	echoMiddleware "github.com/labstack/echo/v5/middleware"
 )
 
 type CustomValidator struct {
@@ -50,5 +51,8 @@ func main() {
 	apiGroup.PUT("/todos/:id", rest.PutTodo, middleware.GenerateJwt)
 	apiGroup.DELETE("/todos/:id", rest.DeleteTodo, middleware.GenerateJwt)
 
-	e.Logger.Fatal(e.Start(defaultPort))
+	if err := e.Start(defaultPort); err != nil {
+		e.Logger.Error("failed to start server", "error", err)
+		os.Exit(1)
+	}
 }

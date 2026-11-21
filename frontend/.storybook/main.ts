@@ -1,4 +1,4 @@
-import type { StorybookConfig } from '@storybook/nextjs';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +11,7 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-links', '@chromatic-com/storybook', '@storybook/addon-docs'],
 
   framework: {
-    name: '@storybook/nextjs',
+    name: '@storybook/nextjs-vite',
     options: {},
   },
 
@@ -19,30 +19,19 @@ const config: StorybookConfig = {
 
   staticDirs: ['../public'],
 
-  webpackFinal(config) {
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
+  viteFinal(config) {
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
         '@': path.resolve(__dirname, '../src'),
-      };
-    }
-
-    // Next.js 16では next/dist/build/swc から isWasm が削除されたため
-    // @storybook/nextjs の next-swc-loader-patch.js が失敗するのを回避する
-    try {
-      const swcModule = require('next/dist/build/swc') as Record<string, unknown>;
-      if (typeof swcModule.isWasm !== 'function') {
-        swcModule.isWasm = () => Promise.resolve(false);
-      }
-    } catch {
-      // swc モジュールが存在しない環境では無視する
-    }
-
+      },
+    };
     return config;
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript',
+    reactDocgen: 'react-docgen',
   },
 };
 
