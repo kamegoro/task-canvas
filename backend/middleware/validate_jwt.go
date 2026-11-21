@@ -10,11 +10,11 @@ import (
 	"task-canvas/useCase"
 
 	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 func ValidateJWT(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		authHeader := c.Request().Header.Get("Authorization")
 
 		if authHeader == "" {

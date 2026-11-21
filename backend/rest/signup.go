@@ -9,7 +9,7 @@ import (
 	"task-canvas/logger"
 	"task-canvas/useCase"
 
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type PostSignUpUsersRequest struct {
@@ -17,7 +17,7 @@ type PostSignUpUsersRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
-func PostSignUpUsers(c echo.Context) error {
+func PostSignUpUsers(c *echo.Context) error {
 	req := new(PostSignUpUsersRequest)
 
 	if err := c.Bind(req); err != nil {
