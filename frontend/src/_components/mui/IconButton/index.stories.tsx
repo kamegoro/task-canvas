@@ -1,4 +1,4 @@
-import type { Meta, StoryFn } from '@storybook/nextjs';
+import type { Meta, StoryFn } from '@storybook/nextjs-vite';
 
 import EditIcon from '../EditIcon';
 import IconButton from '.';

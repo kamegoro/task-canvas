@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { Meta, StoryFn } from '@storybook/nextjs';
+import type { Meta, StoryFn } from '@storybook/nextjs-vite';
 
 import TodoCard, { type TodoCardProps } from '.';
 
