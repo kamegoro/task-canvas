@@ -34,11 +34,13 @@ jobs:
       - name: Checkout task-canvas
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           path: task-canvas
 
       - name: Checkout k8s-infrastructure
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           repository: kamegoro/k8s-infrastructure
           path: k8s-infrastructure
 
@@ -46,12 +48,14 @@ jobs:
         if: inputs.extra-checkout-repo != ''
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           repository: kamegoro/${{ inputs.extra-checkout-repo }}
           path: ${{ inputs.extra-checkout-repo }}
 
       - name: Checkout task-canvas-e2e
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           repository: kamegoro/task-canvas-e2e
           path: task-canvas-e2e
 
@@ -76,8 +80,8 @@ jobs:
           mise install
           mise ls
 
-          echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> $GITHUB_ENV
-          echo "$HOME/.sdkman/candidates/java/current/bin" >> $GITHUB_PATH
+          echo "JAVA_HOME=$HOME/.sdkman/candidates/java/current" >> "$GITHUB_ENV"
+          echo "$HOME/.sdkman/candidates/java/current/bin" >> "$GITHUB_PATH"
 
       - name: Start minikube
         uses: medyagh/setup-minikube@v0.0.21

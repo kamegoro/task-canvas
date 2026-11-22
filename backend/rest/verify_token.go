@@ -1,7 +1,7 @@
 package rest
 
-import "github.com/labstack/echo/v4"
+import "github.com/labstack/echo/v5"
 
-func VerifyToken(c echo.Context) error {
+func VerifyToken(c *echo.Context) error {
 	return c.String(200, "Token is valid")
 }

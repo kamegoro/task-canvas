@@ -10,7 +10,7 @@ import (
 	"task-canvas/useCase"
 
 	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type User struct {
@@ -22,7 +22,7 @@ type ResponseUser struct {
 	User User `json:"user"`
 }
 
-func GetUsersMe(c echo.Context) error {
+func GetUsersMe(c *echo.Context) error {
 	taskCanvasDriver := db_driver.NewQuerier(config.PgPool)
 	userGateway := gateway.NewUserGateway(taskCanvasDriver)
 	getUsersMeUseCase := useCase.NewGetUsersMeUseCase(userGateway)
